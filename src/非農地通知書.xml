@@ -1,0 +1,804 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>acer_him08</Author>
+  <LastAuthor>中村 雄一</LastAuthor>
+  <LastPrinted>2013-08-29T23:42:07Z</LastPrinted>
+  <Created>2013-07-30T02:53:13Z</Created>
+  <LastSaved>2013-08-27T06:04:54Z</LastSaved>
+  <Version>12.00</Version>
+ </DocumentProperties>
+ <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">
+  <AllowPNG/>
+ </OfficeDocumentSettings>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>11760</WindowHeight>
+  <WindowWidth>20640</WindowWidth>
+  <WindowTopX>360</WindowTopX>
+  <WindowTopY>75</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="11"
+    ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="m95856384">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95856404">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95856160">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95856180">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95856200">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95856220">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95856240">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95856260">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95855936">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95855956">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95855976">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95855996">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95856016">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95856036">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95855712">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95855732">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95855752">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95855772">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95855792">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95855812">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="m95855508">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior ss:Color="#C3E4F3" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="m95855528">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior ss:Color="#C3E4F3" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="m95855548">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior ss:Color="#C3E4F3" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="m95855568">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior ss:Color="#C3E4F3" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="m95855588">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="m95855608">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center" ss:Indent="1"/>
+   <Borders>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <NumberFormat/>
+  </Style>
+  <Style ss:ID="s62">
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="11"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s64">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="18"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s65">
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s67">
+   <Alignment ss:Horizontal="Distributed" ss:Vertical="Center"/>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s68">
+   <Alignment ss:Vertical="Center"/>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s69">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center" ss:Indent="1"/>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s71">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s73">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Justify" ss:WrapText="1"/>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s75">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s93">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior ss:Color="#C3E4F3" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s94">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior ss:Color="#C3E4F3" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s99">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s100">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s113">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s123">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s124">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s133">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s134">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s135">
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous"/>
+   </Borders>
+   <Font ss:FontName="ＭＳ Ｐ明朝" x:CharSet="128" x:Family="Roman" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s147">
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="s148">
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="11"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s149">
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s150">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="11"
+    ss:Color="#000000"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="非農地通知書">
+  <Table ss:ExpandedColumnCount="9" ss:ExpandedRowCount="36" x:FullColumns="1"
+   x:FullRows="1" ss:StyleID="s62" ss:DefaultColumnWidth="87"
+   ss:DefaultRowHeight="21.75">
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="108"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="105.75"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="102.75"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="69"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="21.75"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="46.5"/>
+   <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="54"/>
+   <Row ss:AutoFitHeight="0"/>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:MergeAcross="6" ss:StyleID="s64"><Data ss:Type="String">非　農　地　通　知　書</Data></Cell>
+   </Row>
+   <Row ss:Index="4" ss:AutoFitHeight="0" ss:Height="17.0625" ss:StyleID="s65">
+    <Cell ss:Index="5" ss:MergeAcross="2" ss:StyleID="s67"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">アイノウイダイハッコウバンゴウゴウ</PhoneticText><Data
+      ss:Type="String">姶農委第 {発行番号} 号</Data></Cell>
+    <Cell ss:StyleID="s68"/>
+    <Cell ss:StyleID="s68"/>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="17.0625" ss:StyleID="s65">
+    <Cell ss:Index="5" ss:MergeAcross="2" ss:StyleID="s67"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ハッコウネンガッピ</PhoneticText><Data
+      ss:Type="String">{発行年月日}</Data></Cell>
+    <Cell ss:StyleID="s68"/>
+    <Cell ss:StyleID="s68"/>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:StyleID="s65">
+    <Cell ss:StyleID="s69"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">シメイ</PhoneticText><Data
+      ss:Type="String">{氏名}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:StyleID="s65" ss:Span="1"/>
+   <Row ss:Index="9" ss:AutoFitHeight="0" ss:Height="17.0625" ss:StyleID="s65">
+    <Cell ss:Index="3" ss:MergeAcross="3" ss:StyleID="s71"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オウリョウシノウギョウイインカイ</PhoneticText><Data
+      ss:Type="String">姶 良 市 農 業 委 員 会</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="17.0625" ss:StyleID="s65">
+    <Cell ss:Index="3" ss:MergeAcross="3" ss:StyleID="s71"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">カイナガヤマクチタダシハル</PhoneticText><Data
+      ss:Type="String">会  長　   山 口　　正 春</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="29.25" ss:StyleID="s65"/>
+   <Row ss:AutoFitHeight="0" ss:Height="22.5" ss:StyleID="s65">
+    <Cell ss:MergeAcross="6" ss:MergeDown="4" ss:StyleID="s73"><Data
+      ss:Type="String">　 {決定総会年月日}の姶良市農業委員会総会において、貴殿が所有する下記土地は農地法第２条第１項の農地に該当しない旨判断しましたのでお知らせします。&#10; 　このため、下記土地の登記について、登記簿地目の変更登記を行って頂きますようお願いします。&#10; 　なお、農業委員会は下記土地について、農地基本台帳を整理するとともに、姶良市及び関係機関に対し、農地法第２条第１項の農地に該当しない旨を通知することを申し添えます。</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:StyleID="s65" ss:Span="3"/>
+   <Row ss:Index="17" ss:AutoFitHeight="0" ss:Height="14.25" ss:StyleID="s65"/>
+   <Row ss:AutoFitHeight="0" ss:Height="24.75" ss:StyleID="s65">
+    <Cell ss:MergeAcross="6" ss:StyleID="s75"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">キ</PhoneticText><Data
+      ss:Type="String">記</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="13.5"/>
+   <Row ss:AutoFitHeight="0" ss:Height="18.9375">
+    <Cell ss:MergeAcross="2" ss:StyleID="m95855508"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">トチショザイカゴシマケンアイラシ</PhoneticText><ss:Data
+      ss:Type="String" xmlns="http://www.w3.org/TR/REC-html40"><Font
+       html:Color="#000000">土地の所在　　　</Font><B><Font html:Color="#000000">（鹿児島県　姶良市）</Font></B></ss:Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855528"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ノボルキ</PhoneticText><Data
+      ss:Type="String">登　記</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:MergeDown="1" ss:StyleID="m95855548"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">面積（㎡）</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="18.9375">
+    <Cell ss:StyleID="s93"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ダイジ</PhoneticText><Data
+      ss:Type="String">大　字</Data></Cell>
+    <Cell ss:StyleID="s94"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">アザ</PhoneticText><Data
+      ss:Type="String">字</Data></Cell>
+    <Cell ss:StyleID="s94"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チｂ</PhoneticText><Data
+      ss:Type="String">地　番</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855568"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チメ</PhoneticText><Data
+      ss:Type="String">地　目</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s99"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字01}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字01}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番01}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855588"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目01}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855608"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積01}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s113"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字02}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字02}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番02}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855712"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目02}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855732"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積02}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s99"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字03}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字03}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番03}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855752"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目03}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855772"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積03}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s113"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字04}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字04}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番04}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855792"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目04}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855812"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積04}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s99"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字05}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字05}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番05}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855936"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目05}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855956"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積05}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s113"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字06}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字06}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番06}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855976"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目06}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95855996"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積06}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s99"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字07}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字07}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番07}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856016"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目07}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856036"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積07}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s113"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字08}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字08}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番08}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856160"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目08}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856180"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積08}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s99"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字09}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字09}</Data></Cell>
+    <Cell ss:StyleID="s100"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番09}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856200"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目09}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856220"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積09}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s123"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">オオアザ</PhoneticText><Data
+      ss:Type="String">{大字10}</Data></Cell>
+    <Cell ss:StyleID="s124"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コアザ</PhoneticText><Data
+      ss:Type="String">{小字10}</Data></Cell>
+    <Cell ss:StyleID="s124"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チバン</PhoneticText><Data
+      ss:Type="String">{地番10}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856240"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">チモク</PhoneticText><Data
+      ss:Type="String">{地目10}</Data></Cell>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856260"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">メンセキ</PhoneticText><Data
+      ss:Type="String">{面積10}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="26.0625">
+    <Cell ss:StyleID="s133"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ケイ</PhoneticText><Data
+      ss:Type="String">計</Data></Cell>
+    <Cell ss:StyleID="s134"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ケンスウケン</PhoneticText><Data
+      ss:Type="String">{件数}件</Data></Cell>
+    <Cell ss:StyleID="s135"/>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856384"/>
+    <Cell ss:MergeAcross="1" ss:StyleID="m95856404"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ケイ</PhoneticText><Data
+      ss:Type="String">{面積計}</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="24.75"/>
+   <Row ss:AutoFitHeight="0" ss:Height="18.9375">
+    <Cell ss:StyleID="s147"><Data ss:Type="String">※　この通知は、登記の地目変更を行う際に必要な書類となります。</Data></Cell>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="18.9375">
+    <Cell ss:StyleID="s147"><Data ss:Type="String">　　 農地法第２条第１項の農地とは、耕作の目的に供される土地の事です。</Data></Cell>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s149"/>
+    <Cell ss:StyleID="s148"/>
+    <Cell ss:StyleID="s150"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ツウチバンゴウツウチバンゴウ</PhoneticText><Data
+      ss:Type="String">通知番号　　{通知番号}</Data></Cell>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.4" x:Left="0.99" x:Right="0.66" x:Top="0.75"/>
+   </PageSetup>
+   <Unsynced/>
+   <Print>
+    <ValidPrinterInfo/>
+    <PaperSizeIndex>9</PaperSizeIndex>
+    <HorizontalResolution>600</HorizontalResolution>
+    <VerticalResolution>600</VerticalResolution>
+   </Print>
+   <Selected/>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <ActiveRow>28</ActiveRow>
+     <ActiveCol>8</ActiveCol>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>

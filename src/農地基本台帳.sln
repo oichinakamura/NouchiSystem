@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.87
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "農地基本台帳", "農地基本台帳.vbproj", "{51E5959C-4B31-40DB-A00F-D1092B438C0C}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HIMAsyncDataSolution", "..\..\..\..\git\HIMCommon.git\src\HIMAsyncDataSolution\HIMAsyncDataSolution.shproj", "{E981FD4A-0392-4042-A49F-13991C19284E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HIMCommon", "..\..\HIMCommon.git\src\HIMCommon\HIMCommon.shproj", "{BCD88FD1-4DA3-448B-AD4E-0CAA73FC6A31}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\..\HIMCommon.git\src\HIMCommon\HIMCommon.projitems*{bcd88fd1-4da3-448b-ad4e-0caa73fc6a31}*SharedItemsImports = 13
+		..\..\..\..\git\HIMCommon.git\src\HIMAsyncDataSolution\HIMAsyncDataSolution.projitems*{e981fd4a-0392-4042-a49f-13991c19284e}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51E5959C-4B31-40DB-A00F-D1092B438C0C}.Debug|x86.ActiveCfg = Debug|x86
+		{51E5959C-4B31-40DB-A00F-D1092B438C0C}.Debug|x86.Build.0 = Debug|x86
+		{51E5959C-4B31-40DB-A00F-D1092B438C0C}.Release|x86.ActiveCfg = Release|x86
+		{51E5959C-4B31-40DB-A00F-D1092B438C0C}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3ADF31DE-D095-474F-9738-7A8E259F4784}
+	EndGlobalSection
+EndGlobal

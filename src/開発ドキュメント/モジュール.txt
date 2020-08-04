@@ -1,0 +1,2625 @@
+Module mod住記設定
+    Option Explicit
+    Private Type type個人
+        ID As Long
+        人格区分 As Long
+        住記区分 As Long
+        状態区分 As Long
+        世帯No As Long
+        フリガナ As String
+        氏名 As String
+        生年月日 As Date
+        性別 As Long
+        続柄 As Long
+        郵便番号 As String
+        市町村ID As Long
+        住所 As String
+        行政区 As Long
+        投票区 As Long
+        異動日 As Date
+    End Type
+
+    
+    Private Function GetNum(ByRef St As String) As Variant
+        GetNum = Val(Left$(St & ",", InStr(St & ",", ",") - 1))
+        St = MID$(St & ",", InStr(St & ",", ",") + 1)
+    End Function
+
+    Private Function GetDateTime(ByRef St As String) As Date
+        
+        If IsDate(Left$(St & ",", InStr(St & ",", ",") - 1)) Then
+            GetDateTime = CDate(Left$(St & ",", InStr(St & ",", ",") - 1))
+        Else
+            GetDateTime = 0
+        End If
+        
+        St = MID$(St & ",", InStr(St & ",", ",") + 1)
+    End Function
+    Private Function GetSLKString(ByRef St As String) As String
+        If Left$(St, 1) = Chr$(34) Then
+            GetSLKString = Trim(MID$(St, 2, InStr(2, St, Chr$(34)) - 2))
+            
+            If InStr(St, Chr$(34) & ",") Then
+                St = MID$(St, 2)
+                St = MID$(St, InStr(St, Chr$(34)) + 1)
+                St = MID$(St, InStr(St, ",") + 1)
+            Else
+                St = ""
+            End If
+        Else
+            GetSLKString = Trim(Left$(St, InStr(St, ",") - 1))
+            St = MID$(St, InStr(St, ",") + 1)
+        End If
+    End Function
+
+
+    
+    Public Function Load住記Text()
+        Dim St As String
+        Dim Ts As CTextStream
+        Dim Ar As Variant
+        Dim nMax As Long
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        
+        St = SystemDB.DBProperty("住記テキストの指示")
+        If Len(St) = 0 Then
+        
+        Else
+            Set Rs = SystemDB.GetRecordsetEx("SELECT * FROM [D:個人Info]", , , "BAS")
+            Set Ts = Fnc.Fs.OpenTextFile(St, ForReading, False)
+            St = Ts.ReadLine
+            nMax = UBound(Split(St, ","))
+            Do Until Ts.AtEndOfStream
+                St = Ts.ReadLine
+                Ar = Split(St, ",")
+                If UBound(Ar) <> nMax Then
+                    Stop
+                ElseIf Rs.FindFirst("[ID]=" & Val(Ar(0))) Then
+                    Rs.Value("世帯ID") = Val(Ar(5))
+                    Rs.Value("フリガナ") = GetFString(Ar(8))
+                    Rs.Value("氏名") = GetFString(Ar(10))
+                    Rs.Update
+                Else
+                    Rs.AddNew
+                        Rs.Value("ID") = Val(Ar(0))
+                        Rs.Value("世帯ID") = Val(Ar(5))
+                        Rs.Value("フリガナ") = GetFString(Ar(8))
+                        Rs.Value("氏名") = GetFString(Ar(10))
+                    Rs.Update
+                End If
+            Loop
+            Ts.CloseFile
+            MsgBox "終了"
+        End If
+    End Function
+
+    Private Function GetFString(ByVal St As String) As String
+        St = Trim(St)
+        If Left$(St, 1) = Chr$(34) And Right$(St, 1) = Chr$(34) Then
+            St = Left$(MID$(St, 2), Len(St) - 2)
+        End If
+        GetFString = St
+    End Function
+
+End Module
+
+
+
+
+Module  mod申請と履歴
+    Option Explicit
+
+    Public Sub List関連申請(nID As Long)
+        Dim St As String
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Set Rs = SystemDB.GetRecordsetEx("SELECT * FROM [D_申請] WHERE [農地リスト] LIKE '%" & nID & "%'", 0, , "土地探し")
+        
+        Do Until Rs.EOF
+            If InStr(Rs.V("農地リスト") & ";", "." & nID & ";") Then St = St & "," & Rs.ID
+            Rs.MoveNext
+        Loop
+        If Len(St) Then
+            St = MID$(St, 2)
+            mvarPDW.SQLListview.SQLListviewCHead "SELECT '申請.' & [D_申請].[ID] AS [KEY], [名称],'Apply' AS [Icon],総会番号,IIf(IsNull([受付補助記号]),[受付番号],[受付補助記号] & '-' & [受付番号]) AS [受付],[通年受付番号],[受付年月日],[許可番号],[許可年月日],[D_申請].[小作料] & [小作料単位] AS [小作料],IIF(IsNull([AutoID]),'－','○') AS [土地管理情報の有無] FROM [D_申請] LEFT JOIN [D_土地管理] ON [D_申請].[ID] = [D_土地管理].[ID] WHERE [D_申請].[ID] IN (" & St & ") AND [状態]=2", Replace(SysAD.GetSettingData("農地基本台帳", "申請許可済リスト表示", ADApp.Common.AppData("申請許可済リスト表示")), ",", ";"), "関連申請"
+        Else
+            MsgBox "該当する申請がありません", vbInformation, "農地に関連する申請"
+        End If
+    End Sub
+
+End Module
+
+
+
+
+
+
+
+
+
+
+Module 　mod農家台帳
+    Option Explicit
+
+    
+    Public Type PrnData
+        ID As Long
+        世帯ID As Long
+        
+        申請者名 As String
+        住所 As String
+        
+        n田合計 As Long
+        n畑合計 As Long
+        市町村 As String
+        都道府県名 As String
+        会長名 As String
+        会長肩書 As String
+    End Type
+    
+    Public Type type貸借情報
+        申請ID As Long
+        申請者A As Long
+        申請者世帯A As Long
+        申請者B As Long
+        申請者世帯B As Long
+        土地リスト As String
+    End Type
+    
+    Public Function LongAddr(sStr As String)
+        Dim sTown As String
+        sTown = SystemDB.DBProperty("市町村名")
+      
+        
+        If Left$(sStr, Len(sTown)) = sTown Then
+        Else
+            If Left$(sStr, 4) = "鹿児島市" Then
+            
+                LongAddr = "鹿児島県" & sStr
+                Exit Function
+            End If
+        End If
+        
+        If Left$(sStr, Len(SystemDB.DBProperty("都道府県名"))) = SystemDB.DBProperty("都道府県名") Then
+            LongAddr = sStr
+        ElseIf Len(SystemDB.DBProperty("郡部")) > 0 And Left$(sStr, Len(SystemDB.DBProperty("郡部"))) = SystemDB.DBProperty("郡部") Then
+            LongAddr = SystemDB.DBProperty("都道府県名") & sStr
+        ElseIf Len(SystemDB.DBProperty("郡部")) > 0 And Left$(sStr, Len(SystemDB.DBProperty("郡部"))) <> SystemDB.DBProperty("郡部") And Left$(sStr, Len(sTown)) = sTown Then
+            LongAddr = SystemDB.DBProperty("都道府県名") & SystemDB.DBProperty("郡部") & sStr
+        ElseIf Len(SystemDB.DBProperty("郡部")) = 0 And Left$(sStr, Len(sTown)) = sTown Then
+            LongAddr = SystemDB.DBProperty("都道府県名") & sStr
+        Else
+            Dim A As Variant
+            Dim n As Long
+            A = ADApp.Common.MasterTable.ItemArray("大字")
+            sTown = ""
+            For n = 0 To UBound(A)
+                If Len(MID$(A(n), InStr(A(n), ",") + 1)) = 0 Then
+                ElseIf MID$(A(n), InStr(A(n), ",") + 1) = Left$(sStr, Len(MID$(A(n), InStr(A(n), ",") + 1))) Then
+                    sTown = SystemDB.DBProperty("都道府県名") & SystemDB.DBProperty("郡部") & SystemDB.DBProperty("市町村名")
+                    Exit For
+                End If
+            Next
+                If sTown = "" Then
+                    sTown = SystemDB.DBProperty("都道府県名") & SystemDB.DBProperty("郡部") & SystemDB.DBProperty("市町村名")
+                End If
+            
+            LongAddr = sTown & sStr
+        End If
+    End Function
+    
+    Public Sub sub申請の整合性()
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim St As String
+        Dim Ar As Variant
+        
+        Set Rs = SystemDB.GetRecordsetEx("SELECT D_申請.ID,D_申請.農地リスト, D_申請.法令, D_申請.受付年月日, D_申請.許可年月日 FROM D_申請;", 0, , "申請の整合性")
+        mvarPDW.WaitMessage = "整合性確認"
+        Do Until Rs.EOF
+            If Rs.IsNotNull("農地リスト") Then
+            St = Replace(Replace(Replace(Rs.V("農地リスト"), "転用", ""), "農地.", ""), ";", ",")
+            Select Case Rs.V("法令")
+                Case 30: SystemDB.ExecuteSQL "UPDATE D_土地履歴 SET D_土地履歴.申請ID = " & Rs.ID & " WHERE (((D_土地履歴.LID) In (" & St & ")) AND ((D_土地履歴.異動事由)=10030 OR (D_土地履歴.異動事由)=10031) AND (((D_土地履歴.申請ID)=0) OR (D_土地履歴.申請ID) Is Null));"
+                Case 31: SystemDB.ExecuteSQL "UPDATE D_土地履歴 SET D_土地履歴.申請ID = " & Rs.ID & " WHERE (((D_土地履歴.LID) In (" & St & ")) AND ((D_土地履歴.異動事由)=10030 OR (D_土地履歴.異動事由)=10031) AND (((D_土地履歴.申請ID)=0) OR (D_土地履歴.申請ID) Is Null));"
+                Case 32: SystemDB.ExecuteSQL "UPDATE D_土地履歴 SET D_土地履歴.申請ID = " & Rs.ID & " WHERE (((D_土地履歴.LID) In (" & St & ")) AND ((D_土地履歴.異動事由)=10030 OR (D_土地履歴.異動事由)=10031) AND (((D_土地履歴.申請ID)=0) OR (D_土地履歴.申請ID) Is Null));"
+                Case 33: SystemDB.ExecuteSQL "UPDATE D_土地履歴 SET D_土地履歴.申請ID = " & Rs.ID & " WHERE (((D_土地履歴.LID) In (" & St & ")) AND ((D_土地履歴.異動事由)=10030 OR (D_土地履歴.異動事由)=10031) AND (((D_土地履歴.申請ID)=0) OR (D_土地履歴.申請ID) Is Null));"
+                Case 61: SystemDB.ExecuteSQL "UPDATE D_土地履歴 SET D_土地履歴.申請ID = " & Rs.ID & " WHERE (((D_土地履歴.LID) In (" & St & ")) AND ((D_土地履歴.異動事由)=10061 OR (D_土地履歴.異動事由)=10062) AND (((D_土地履歴.申請ID)=0) OR (D_土地履歴.申請ID) Is Null));"
+                Case 62: SystemDB.ExecuteSQL "UPDATE D_土地履歴 SET D_土地履歴.申請ID = " & Rs.ID & " WHERE (((D_土地履歴.LID) In (" & St & ")) AND ((D_土地履歴.異動事由)=10061 OR (D_土地履歴.異動事由)=10062) AND (((D_土地履歴.申請ID)=0) OR (D_土地履歴.申請ID) Is Null));"
+                Case 50, 51, 500, 40
+                Case Else
+                    Debug.Print Rs.V("法令")
+            End Select
+            End If
+            Rs.MoveNext
+        Loop
+        mvarPDW.WaitMessage = ""
+    End Sub
+    
+    Public Function Fnc農地追加(ByVal s地番 As String, Optional ByVal nID As Long = -1, Optional ByVal n所有世帯ID As Long = 0, Optional ByVal n所有者ID As Long = 0, Optional ByVal bOpen As Boolean = False) As Long
+        Dim n As Long
+        If Len(Trim(s地番)) = 0 Then Exit Function
+        If nID = 0 Then
+            nID = Fnc.DBGetMinID(SystemDB, "D:農地Info")
+            n = Fnc.DBGetMinID(SystemDB, "D_転用農地")
+            If n < nID Then nID = n - 1
+            n = Fnc.DBGetMinID(SystemDB, "D_削除農地")
+            If n < nID Then nID = n - 1
+        End If
+        SystemDB.ExecuteSQL "INSERT INTO [D:農地Info] ( ID, 所有世帯ID, 所有者ID, 地番 ) VALUES(" & nID & "," & n所有世帯ID & "," & n所有者ID & ",'" & s地番 & "');"
+        If bOpen Then ADApp.DataviewCol.Add ADApp.ObjectMan.GetObject("農地." & nID)
+        Fnc農地追加 = nID
+    End Function
+    
+    Public Sub sub支所番号設定()
+        Dim s支所番号 As String
+        s支所番号 = SysAD.GetSettingData("農地基本台帳", "支所番号", 1)
+        If Fnc.InputTextEx("支所番号の設定", "支所番号を入力してください(本庁は1番です)", s支所番号, 1, vbIMEModeOff) = False Then
+        ElseIf Val(s支所番号) Then
+            SysAD.SetSettingData "農地基本台帳", "支所番号", Val(s支所番号)
+        End If
+    End Sub
+    
+    Public Sub Find世帯With世帯番号(Optional nMode As Long = 0)
+        Dim pID As Long
+        pID = Val(InputBox("世帯番号を入力してください", "検索"))
+        If pID Then
+            Select Case nMode
+                Case 0:  view世帯List " WHERE [D:世帯INFO].[ID]=" & pID, "世帯検索 ID=" & pID '/** 農地0001-0001-0001
+                Case 1: ADApp.DataviewCol.Add ObjectMan.GetObject("営農情報." & pID)
+            End Select
+        End If
+    End Sub
+    
+    Public Sub Find個人With住民番号()
+        Dim SID As String
+        If Fnc.InputTextEx("検索", "住民番号を入力してください", SID, 1) Then
+            If Val(SID) Then SQLList世帯員 "[D:個人Info].[ID]=" & Val(SID), "住民番号=" & Val(SID) & "の検索", True
+        End If
+    End Sub
+    
+    Public Sub Find個人With生年月日()
+        Dim pDate As Date
+        pDate = Date
+        If Fnc.InputDateEx("生年月日を入力してください", "検索", pDate) Then
+            SQLList世帯員 "[D:個人Info].[生年月日]=#" & pDate & "#", "生年月日=" & Format(pDate, "GEE年MM月DD日") & "の検索", True
+        End If
+    End Sub
+
+    '/*************** 農業者の作成 *****************/
+    Public Sub CreateFarmer(Optional ByVal nID As Long = -1, Optional ByVal nFamID As Long = 0, Optional ByVal nTownID As Long = -1, Optional ByVal n住民区分 As Long = 0, Optional sTitle As String = "住民の追加")
+        Dim pDic As ADBasicLIB2.CDataDictionary
+        Dim stName As String
+        Dim n As Long
+        Dim St As String
+        
+        If nID = -1 Then
+            St = Fnc.DBGetMinID(SystemDB, "D:個人Info")
+            If Val(St) > -1 Then St = -1
+            Set pDic = Fnc.InputMulti("人の追加", "住民番号が不明の場合はマイナス番号のままで登録してください。", "住民番号;数値;" & St & "|氏名;文字;")
+            If pDic Is Nothing Then Exit Sub
+            If Val(pDic.Item("住民番号")) = 0 Then Exit Sub
+            If pDic.length("氏名") = 0 Then Exit Sub
+            nID = Val(pDic.Item("住民番号"))
+            stName = pDic.Item("氏名")
+        End If
+        
+        If nID = -1 Then  '町外
+            n = SystemDB.MinID("D:個人Info", "ID", , -1)
+            If n > -1 Then St = -1
+            SystemDB.ExecuteSQL "INSERT INTO [D:個人INFO]([ID],[氏名],[市町村ID],[世帯ID]) VALUES(" & n & ",'" & stName & "'," & nTownID & "," & nFamID & ");"
+        Else            '町内
+            If nID < 0 Then
+                nTownID = -1
+            ElseIf Not IsNull(SystemDB.GetDirectData("S_システムデータ", "Data", , "市町村コード")) Then
+                nTownID = Val(SystemDB.GetDirectData("S_システムデータ", "Data", , "市町村コード"))
+            Else
+                nTownID = 0
+            End If
+            
+            If Not SystemDB.RecordExists("D:個人Info", "[ID]=" & nID) Then
+                n = nID
+                SystemDB.ExecuteSQL "INSERT INTO [D:個人INFO]([ID],[氏名],[市町村ID],[世帯ID],[住民区分]) VALUES(" & n & ",'" & stName & "'," & nTownID & "," & nFamID & "," & n住民区分 & ");"
+            Else
+                MsgBox "すでに[" & nID & "]の住民が存在しました", vbCritical
+                n = nID
+            End If
+        End If
+            
+        mvarPDW.DataviewCol.Add ADApp.ObjectMan.GetObject("世帯員." & n)
+    End Sub
+    
+    '/********************** 集計 ************************/
+    Public Sub sub住所別()
+        mvarPDW.WaitMessage = "集計中..."
+        
+        With SystemDB
+            .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = [住所];"
+            .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = '県外' WHERE ((([D:個人Info].住所Work) LIKE '%都%'));"
+            .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = '県外' WHERE ((([D:個人Info].住所Work) LIKE '%道%'));"
+            .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = '大阪府' WHERE ((([D:個人Info].住所Work) LIKE '%大阪府%'));"
+            .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = '京都府' WHERE ((([D:個人Info].住所Work) LIKE '%京都府%'));"
+    
+            Select Case .DBProperty("都道府県ID")
+                Case 46:
+                        .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = MID$([住所Work],5) WHERE LEFT$([D:個人Info].住所Work,4)='鹿児島県';"
+                        .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = '県内' WHERE ((([D:個人Info].住所Work) In ('鹿児島市','出水市')));"
+            End Select
+            .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = '県外' WHERE ((([D:個人Info].住所Work) LIKE '%県%'));"
+            .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = Left$([住所Work],InStr([住所Work],'市')) WHERE ((([D:個人Info].住所Work) LIKE '%市%'));"
+            .ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].住所Work = Left$([住所Work],InStr([住所Work],'町')) WHERE ((([D:個人Info].住所Work) LIKE '%町%'));"
+        End With
+        
+        mvarPDW.WaitMessage = ""
+    End Sub
+    
+    Public Sub sub住民区分別集計()
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        mvarPDW.WaitMessage = "集計中..."
+        SystemDB.ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].OK = False,[D:個人Info].田所有 = 0,[D:個人Info].畑所有 = 0,[D:個人Info].樹所有 = 0;"
+
+        Set Rs = SystemDB.GetRecordsetEx("SELECT [D:個人Info].ID, Sum([D:農地Info].田面積) AS 田面積の合計, Sum([D:農地Info].畑面積) AS 畑面積の合計, Sum([D:農地Info].樹園地) AS 樹園地の合計 FROM [D:農地Info] INNER JOIN [D:個人Info] ON [D:農地Info].所有者ID = [D:個人Info].ID GROUP BY [D:個人Info].ID;", 0, , "集計")
+        Do Until Rs.EOF
+            SystemDB.ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].OK = True, [D:個人Info].田所有 = " & Rs.Value("田面積の合計") & ", [D:個人Info].畑所有 = " & Rs.Value("畑面積の合計") & ", [D:個人Info].樹所有 = " & Rs.Value("樹園地の合計") & " WHERE [D:個人Info].ID=" & Rs.ID & ";"
+            Rs.MoveNext
+        Loop
+        SystemDB.CloseRs Rs
+
+        Set Rs = SystemDB.GetRecordsetEx("SELECT [D:個人Info].ID, Sum([D:農地Info].田面積) AS 田面積の合計, Sum([D:農地Info].畑面積) AS 畑面積の合計, Sum([D:農地Info].樹園地) AS 樹園地の合計 FROM [D:農地Info] INNER JOIN [D:個人Info] ON [D:農地Info].所有者ID = [D:個人Info].ID WHERE ((([D:農地Info].遊休化)=True)) GROUP BY [D:個人Info].ID;", 0, , "集計")
+        Do Until Rs.EOF
+            SystemDB.ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].田遊休 = " & Rs.Value("田面積の合計") & ", [D:個人Info].畑遊休 = " & Rs.Value("畑面積の合計") & ", [D:個人Info].樹遊休 = " & Rs.Value("樹園地の合計") & " WHERE [D:個人Info].ID=" & Rs.ID & ";"
+            Rs.MoveNext
+        Loop
+        SystemDB.CloseRs Rs
+        
+        mvarPDW.SQLListview.SQLListviewCHead "SELECT '住民区分.' & [M_住民区分].ID AS [KEY],[M_住民区分].ID,M_住民区分.住民区分, Count([D:個人Info].ID) AS 人数, Sum([D:個人Info].田所有) AS 田所有の合計, Sum([D:個人Info].畑所有) AS 畑所有の合計, Sum([D:個人Info].樹所有) AS 樹所有の合計, Sum([D:個人Info].田遊休) AS 田遊休の合計, Sum([D:個人Info].畑遊休) AS 畑遊休の合計, Sum([D:個人Info].樹遊休) AS 樹遊休の合計 FROM [D:個人Info] INNER JOIN M_住民区分 ON [D:個人Info].住民区分 = M_住民区分.ID WHERE ((([D:個人Info].OK)=True)) GROUP BY [M_住民区分].ID,'住民区分.' & [M_住民区分].ID,[D:個人Info].住民区分, M_住民区分.住民区分 ORDER BY [D:個人Info].住民区分;", "住民区分;住民区分;@番号;ID;@人数;人数;@田合計;田所有の合計;@畑合計;畑所有の合計;@樹合計;樹所有の合計;@田遊休;田遊休の合計;@畑遊休;畑遊休の合計;@樹遊休;樹遊休の合計", "住民区分別集計"
+        mvarPDW.WaitMessage = ""
+    End Sub
+
+    '/********************** 転用農地リスト ************************/
+    Public Sub view転用農地List(sWhere As String, sTitle As String, Optional f As Boolean = False)
+        Dim sSQL As String
+        Dim sFrom As String
+        Dim sHeader As String
+        
+        sSQL = "SELECT '転用農地.' & [V_転用農地].[ID] AS [Key],[農家世帯ID],Max(IIF(IsNull([申請理由A]),'',[申請理由A])) AS 転用目的, V_転用農地.土地所在, 'NOTLAND' AS Icon, 'NOTLAND' AS SelectedIcon, V_転用農地.地番, V_地目.名称 AS 登記地目, V_地目_2.名称 AS 現況地目, V_転用農地.登記簿面積, IIf([V_転用農地].[遊休化],'×','') AS 遊休化, IIf([V_転用農地].[無断転用],'×','') AS 無断転用, [D:個人Info].氏名 AS 所有者, IIf([V_転用農地].[自小作別]=2,'移譲年金','-') AS 借受状態, IIf([V_転用農地].[自小作別]>0,[D:個人Info_1].[氏名],'') AS 借受者, IIf([V_転用農地].[自小作別]>0,[V_転用農地].[小作開始年月日]) AS 貸借開始日, IIf([V_転用農地].[自小作別]>0,[V_転用農地].[小作終了年月日]) AS 貸借終了日, V_転用農地.小作料S, Max(D_申請.受付年月日) AS 受付年月日の最大, Max(D_申請.許可年月日) AS 許可年月日の最大 "
+
+        sFrom = " FROM (D_土地履歴 RIGHT JOIN ((((V_転用農地 LEFT JOIN [D:個人Info] ON V_転用農地.所有者ID = [D:個人Info].ID) LEFT JOIN [D:個人Info] AS [D:個人Info_1] ON V_転用農地.借受人ID = [D:個人Info_1].ID) LEFT JOIN V_地目 ON V_転用農地.登記簿地目 = V_地目.ID) LEFT JOIN V_地目 AS V_地目_2 ON V_転用農地.現況地目 = V_地目_2.ID) ON D_土地履歴.LID = V_転用農地.ID) LEFT JOIN D_申請 ON D_土地履歴.申請ID = D_申請.ID " & _
+        "$WH$GROUP BY 農家世帯ID,'転用農地.' & [V_転用農地].[ID], V_転用農地.土地所在, 'NOTLAND', 'NOTLAND', V_転用農地.地番, V_地目.名称, V_地目_2.名称, V_転用農地.登記簿面積, IIf([V_転用農地].[遊休化],'×',''), IIf([V_転用農地].[無断転用],'×',''), [D:個人Info].氏名, IIf([V_転用農地].[自小作別]=2,'移譲年金','-'), IIf([V_転用農地].[自小作別]>0,[D:個人Info_1].[氏名],''), IIf([V_転用農地].[自小作別]>0,[V_転用農地].[小作開始年月日]), IIf([V_転用農地].[自小作別]>0,[V_転用農地].[小作終了年月日]), V_転用農地.小作料S "
+        
+        sHeader = "∀土地所在;土地所在;受付年月日;受付年月日の最大;転用目的;転用目的;許可年月日;許可年月日の最大;登記地目;登記地目;@登記簿面積;登記簿面積;所有者;所有者;借受状態;借受状態;借受者;借受者;=貸借開始日;貸借開始日;=貸借終了日;貸借終了日"
+        
+        If SysAD.GetSettingData(ADApp.AppName, "農地リストの小作料表示", False) Then sHeader = sHeader & ";小作料;小作料S"
+        'If SysAD.GetSettingData(ADApp.AppName, "農地リストの確認表示", False) Then sSQL = sSQL & ",[V_転用農地].[確認日時]": sHeader = sHeader & ";確認日時;確認日時"
+        If InStr(StrConv(sWhere, vbLowerCase), "where") = 0 Then sWhere = " WHERE " & sWhere
+        
+    
+        sFrom = Replace(sFrom, "$WH$", sWhere & " ")
+        
+        If f Then
+            mvarPDW.SQLListview.SQLFindList sSQL & sFrom, sHeader, sTitle
+        Else
+            mvarPDW.SQLListview.SQLListviewCHead sSQL & sFrom, sHeader, sTitle
+        End If
+    End Sub
+
+    Public Sub view土地台帳List(sWhere As String, sTitle As String, Optional f As Boolean = False)
+        Dim sSQL As String
+        Dim sFrom As String
+        Dim sHeader As String
+        
+        sSQL = "SELECT '固定.' & [M_固定情報].[nID] AS [KEY],[nID],[V_大字].[名称] & [V_小字].[名称] & [M_固定情報].[地番] AS [所在],[V_地目].[名称] AS [現況地目名],[登記地目TB].[名称] AS [登記地目名], M_固定情報.登記面積, M_固定情報.現況面積, M_住民情報.氏名 AS 所有者名 " & _
+        "FROM ([V_大字] INNER JOIN ((([M_固定情報] INNER JOIN [V_地目] ON [M_固定情報].現況地目 = [V_地目].ID) INNER JOIN [V_地目] AS [登記地目TB] ON [M_固定情報].登記地目 = [登記地目TB].ID ) LEFT JOIN [V_小字] ON M_固定情報.小字ID = V_小字.ID ) ON [V_大字].ID = M_固定情報.大字ID) LEFT JOIN [M_住民情報] ON M_固定情報.所有者ID = M_住民情報.ID "
+
+        sHeader = "所在;所在;＃0:一筆コード;nID;所有者名;所有者名;登記面積;登記面積;現況面積;現況面積;登記地目;登記地目名;現況地目;現況地目名;"
+        
+        If InStr(StrConv(sWhere, vbLowerCase), "where") = 0 Then sWhere = " WHERE " & sWhere
+        
+        If f Then
+            mvarPDW.SQLListview.SQLFindList sSQL & sWhere, sHeader, sTitle
+        Else
+            mvarPDW.SQLListview.SQLListviewCHead sSQL & sWhere, sHeader, sTitle
+        End If
+    End Sub
+
+    '/*************** 世帯員・法人の一覧 *****************/
+    Public Sub SQLList世帯員(sWhere As String, ByVal sTitle As String, Optional f As Boolean)
+        Dim sSQL As String
+        Dim sHead As String
+        
+        sSQL = "SELECT '世帯員.' & [D:個人Info].[ID] AS [KEY],[氏名] AS [名称], [D:個人Info].[ID] AS 住民番号,IIF([住民区分]=%Sys.死亡住民コード%,'DeadFarmer','Farmer') AS [ICON],[フリガナ],[住所],[V_続柄].[名称] & IIF(IsNull([D:個人Info].続柄2) Or ([D:個人Info].続柄2=0),'','の' & [V_続柄_2].[名称]) & IIF(([D:個人Info].続柄3) Or ([D:個人Info].続柄3=0),'','の' & [V_続柄_3].[名称]) AS [全続柄],[V_住民区分].名称 AS [住民区分名称],IIF([選挙権の有無],'○','×') AS [選挙権表示],[V_住民区分].ID AS [住民区分コード],[V_行政区].[行政区] " & _
+        ",IIf([生年月日]>0, Format$([生年月日],'GGGEE/MM/DD'),' - ') AS [S生年月日] " & _
+        ",IIF([生年月日]>0,IIF(dateadd('yyyy',datediff('yyyy',[生年月日],now()),[生年月日])>Now(),datediff('yyyy',[生年月日],now())-1,datediff('yyyy',[生年月日],now())),'-') AS [年齢] " & _
+        "FROM (((([D:個人Info] LEFT JOIN [V_続柄] ON [D:個人Info].続柄1 = [V_続柄].ID) LEFT JOIN [V_続柄] AS [V_続柄_2] ON [D:個人Info].続柄2 = [V_続柄_2].ID) LEFT JOIN [V_行政区] ON [D:個人Info].[行政区ID]=[V_行政区].ID) LEFT JOIN [V_住民区分] ON [D:個人Info].住民区分 = [V_住民区分].ID) LEFT JOIN V_続柄 AS V_続柄_3 ON [D:個人Info].続柄3 = V_続柄_3.ID WHERE " & sWhere & " ORDER BY [フリガナ]"
+                        
+        sHead = Replace(SysAD.GetSettingData("農地基本台帳", "世帯員リスト", ADApp.Common.AppData("世帯員リスト")), ",", ";")
+        
+        If f Then
+            mvarPDW.SQLListview.SQLFindList sSQL, sHead, sTitle
+        Else
+            mvarPDW.SQLListview.SQLListviewCHead sSQL, sHead, sTitle
+        End If
+    End Sub
+
+    '/********************** 農地検索 ***********************/
+    Public Sub Find農地With農地番号()
+        Dim St As String
+        St = InputBox("農地整理番号を入力", "農地整理番号からの検索")
+        If Val(St) Then
+            view農地List "WHERE [V_農地].[ID]=" & Val(St), "農地検索", True '/** 農地0001-0001-0002
+        End If
+    End Sub
+
+    '/********************** 農地検索 ***********************/
+    Public Sub Find農地With固定番号()
+        Dim St As String
+        St = InputBox("一筆コードを入力", "一筆コードからの検索")
+        If Val(St) Then
+            view農地List "WHERE [V_農地].[固定資産番号]=" & Val(St), "一筆コード農地検索", True '/** 農地0001-0001-0002
+        End If
+    End Sub
+
+
+
+
+    '/******************************************************/
+    Public Function 市内外の調整() As Boolean
+        Dim n As Long
+        Dim St As String
+        
+        市内外の調整 = False
+        n = Val(SystemDB.DBProperty("市町村ID"))
+        If n = 0 Then
+            MsgBox "市町村ｺｰﾄﾞが入力されていません", vbCritical
+            Exit Function
+        End If
+        St = SystemDB.GetDirectData("S_システムデータ", "DATA", , "市町村名")
+        If Len(St) = 0 Then
+            MsgBox "市町村名が入力されていません", vbCritical
+            Exit Function
+        End If
+        
+        市内外の調整 = True
+    End Function
+
+    '/**********************集落別世帯一覧********************/
+    Public Function subSQLList集落別世帯一覧()
+        mvarPDW.WaitMessage = "集計中..."
+        SystemDB.ExecuteSQL "UPDATE [D:世帯Info] SET [D:世帯Info].自作地 = 0, [D:世帯Info].借入地 = 0, [D:世帯Info].貸付地 = 0;"
+        SystemDB.ExecuteSQL "UPDATE [V_農地] INNER JOIN [D:世帯Info] ON [V_農地].農家世帯ID = [D:世帯Info].ID SET [D:世帯Info].自作地 = 1 WHERE ((([V_農地].自小作別)=0));"
+        SystemDB.ExecuteSQL "UPDATE [V_農地] INNER JOIN [D:世帯Info] ON [V_農地].借受世帯ID = [D:世帯Info].ID SET [D:世帯Info].自作地 = 1 WHERE ((([V_農地].自小作別)>0));"
+        SystemDB.ExecuteSQL "UPDATE [D:世帯Info] INNER JOIN [V_農地] ON [D:世帯Info].ID = [V_農地].農家世帯ID SET [D:世帯Info].貸付地 = 1 WHERE ((([V_農地].借受世帯ID)<>[D:世帯Info].[ID]) AND (([V_農地].自小作別)>0));"
+        SystemDB.CreateView "経営農地計", "SELECT [D:世帯Info].行政区ID, Sum([D:世帯Info].自作地) AS 自作地の合計 FROM [D:世帯Info] GROUP BY [D:世帯Info].行政区ID;"
+        SystemDB.CreateView "貸付農地計", "SELECT [D:世帯Info].行政区ID, Sum([D:世帯Info].貸付地) AS 貸付地の合計 FROM [D:世帯Info] WHERE ((([D:世帯Info].自作地) = 0)) GROUP BY [D:世帯Info].行政区ID;"
+        mvarPDW.WaitMessage = ""
+
+        mvarPDW.SQLListview.SQLListviewCHead "SELECT '集落.' & [V_行政区].ID AS [KEY],RIGHT$('00000' & [V_行政区].ID,5) AS [コード], [V_行政区].行政区, 経営農地計.自作地の合計 AS 経営農家数, 貸付農地計.貸付地の合計 AS 貸付農家数 FROM 貸付農地計 INNER JOIN (経営農地計 INNER JOIN [V_行政区] ON 経営農地計.行政区ID = [V_行政区].ID) ON 貸付農地計.行政区ID = [V_行政区].ID;", "コード;コード;行政区;行政区;@経営農家数;経営農家数;@貸付農家数;貸付農家数", "集落別世帯数一覧"
+    End Function
+
+    '/******************** 農家世帯設定 ***********************/
+    Public Function sub農家世帯設定()
+        SystemDB.ExecuteSQL "UPDATE [D:世帯Info] SET [D:世帯Info].農地との関連 = False WHERE ((([D:世帯Info].農地との関連)=True));"
+        SystemDB.ExecuteSQL "UPDATE [D:世帯Info] INNER JOIN [V_農地] ON [D:世帯Info].ID = [V_農地].農家世帯ID SET [D:世帯Info].農地との関連 = True WHERE ((([D:世帯Info].農地との関連)=False));"
+        SystemDB.ExecuteSQL "UPDATE [D:世帯Info] INNER JOIN [V_農地] ON [D:世帯Info].ID = [V_農地].所有世帯ID SET [D:世帯Info].農地との関連 = True WHERE ((([D:世帯Info].農地との関連)=False));"
+        SystemDB.ExecuteSQL "UPDATE [D:世帯Info] INNER JOIN [V_農地] ON [D:世帯Info].ID = [V_農地].借受世帯ID SET [D:世帯Info].農地との関連 = True WHERE ((([D:世帯Info].農地との関連)=False));"
+        MsgBox "終了しました", vbSystemModal
+    End Function
+
+    '/*************** 農地の作成 *****************/
+    Public Sub CreateLand(ByVal nOwnerID As Long, Optional ByVal nOFamID As Long = 0, Optional bWinOpen As Boolean = True)
+        Dim stName As String
+        Dim n As Long
+        
+        stName = InputBox("地番を入力してください。", "農地の新規登録")
+        If Len(stName) > 0 Then
+            n = SystemDB.MinID("D:農地Info", "ID", , -1)
+            SystemDB.ExecuteSQL "INSERT INTO [D:農地INFO]([ID],[地番],[所有者ID],[所有世帯ID],[借受人ID],[大字ID],[小字ID],[市町村ID],[自小作別],[管理世帯ID],[備考]) VALUES(" & n & ",'" & stName & "'," & nOwnerID & "," & nOFamID & ",0,-1,-1,-1,0,0,'User追加');"
+            If bWinOpen Then
+                mvarPDW.DataviewCol.Add ADApp.ObjectMan.GetObject("農地." & n)
+            End If
+        End If
+    End Sub
+    
+    '/*************** 転用農地の一覧 *****************/
+    Public Sub view転用農地一覧(ByVal 世帯ID As Long)
+        view転用農地List "所有世帯ID = " & 世帯ID, "転用農地一覧"
+    End Sub
+
+    '/***************** 世帯と結びつかない農地一覧 **************/
+    Public Sub view未世帯農地一覧()
+        view農地List "WHERE ([所有世帯ID]=0 Or [所有世帯ID] Is Null)", "未世帯農地一覧" '/** 農地0001-0001-0002
+    End Sub
+
+
+
+
+    
+    Public Sub sub異動from職権管理者変更(ByVal sLandList As String, ByVal n新世帯ID As Long, ByVal n新所有者ID As Long)
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim pDate As Date
+        
+        pDate = Date
+        If Fnc.InputDateEx("異動日", "異動日時を入力してください", pDate) Then
+            Set Rs = SystemDB.GetRecordsetEx("SELECT * FROM [D:農地Info] WHERE [ID] IN (" & Fnc.GetCodeStr(sLandList, "農地") & ")", , , "所有権移転")
+            Do Until Rs.EOF
+                Make農地履歴 Rs.ID, Date, Date, 0, "「" & SystemDB.GetDirectData("D:個人Info", "氏名", Rs.Value("所有者ID")) & "」から「" & SystemDB.GetDirectData("D:個人Info", "氏名", n新所有者ID) & "」へ職権による管理者変更"
+                
+                Rs.Value("管理世帯ID") = n新世帯ID
+                Rs.Value("管理者ID") = n新所有者ID
+                Rs.Update
+                Rs.MoveNext
+            Loop
+            SystemDB.CloseRs Rs
+        End If
+    End Sub
+    
+ 
+
+    Public Sub sub異動from基盤強化法(ByVal dt許可日 As Date, ByVal sKeyList As String, ByVal n新世帯ID As Long, ByVal n新所有者ID As Long, ByVal 申請ID As Long, Optional b無異動 As Boolean = False)
+        Dim St As String
+        Dim Rs As RecordsetEx
+
+        Set Rs = SystemDB.GetRecordsetEx("SELECT * FROM [D:農地Info] Where [ID] In (" & Fnc.GetCodeStr(sKeyList, "農地") & ")", , , "sub異動from基盤強化法")
+        Rs.MoveFirst
+        
+        Do Until Rs.EOF
+            Make農地履歴 Rs.ID, Date, dt許可日, 10060, "「" & SystemDB.GetDirectData("D:個人Info", "氏名", Rs.Value("所有者ID")) & "」から「" & SystemDB.GetDirectData("D:個人Info", "氏名", n新所有者ID) & "」へ基盤強化法にて所有権移転", Rs.Value("所有者ID"), n新所有者ID, 申請ID
+            
+            If Not b無異動 Then
+                Rs.Value("所有世帯ID") = n新世帯ID
+                Rs.Value("所有者ID") = n新所有者ID
+                Rs.Value("管理世帯ID") = 0
+                Rs.Value("管理者ID") = 0
+                Rs.Value("先行異動") = True
+                Rs.Value("先行異動日") = dt許可日
+                
+                Rs.Update
+            End If
+            Rs.MoveNext
+        Loop
+        Rs.CloseRs
+    End Sub
+
+    Public Sub 合併世帯解除(St As String)
+        Dim Ar As Variant
+        Dim n As Long
+        If Len(St) Then
+            Ar = Split(St, ";")
+            mvarPDW.WaitMessage = "合併世帯員の解除"
+            
+            For n = 0 To UBound(Ar)
+                If Val(Ar(n)) <> 0 Then
+                    SystemDB.ExecuteSQL "UPDATE [D:個人Info] INNER JOIN [D:世帯Info] ON [D:個人Info].[住記世帯番号] = [D:世帯Info].ID SET [D:世帯Info].[合併異動] = False"
+                    SystemDB.ExecuteSQL "UPDATE [D:個人Info] SET [D:個人Info].合併異動 = False, [D:個人Info].世帯ID = [住記世帯番号], [D:個人Info].続柄1 = [住記続柄1], [D:個人Info].続柄2 = [住記続柄2], [D:個人Info].続柄3 = [住記続柄3], [D:個人Info].続柄4 = [住記続柄4] WHERE ((([D:個人Info].ID)=" & Val(Ar(n)) & ") AND (([D:個人Info].合併異動)=True) AND (([D:個人Info].住記世帯番号)<>0));"
+                    SystemDB.ExecuteSQL "UPDATE [D:農地Info] SET [D:農地Info].管理世帯ID = Null, [D:農地Info].管理者ID = Null WHERE ((([D:農地Info].管理者ID)=" & Val(Ar(n)) & "));"
+                    SystemDB.ExecuteSQL "UPDATE [D:個人Info] INNER JOIN [D:農地Info] ON [D:個人Info].ID = [D:農地Info].借受人ID SET [D:農地Info].借受世帯ID = [世帯ID] WHERE ((([D:農地Info].借受人ID)=" & Val(Ar(n)) & "));"
+                    SystemDB.ExecuteSQL "UPDATE [D:農地Info] INNER JOIN ([D:個人Info] INNER JOIN [D:世帯Info] ON [D:個人Info].世帯ID = [D:世帯Info].ID) ON [D:農地Info].所有世帯ID = [D:世帯Info].ID SET [D:世帯Info].農地との関連 = True WHERE ((([D:個人Info].ID)=" & Val(Ar(n)) & ") AND (([D:世帯Info].農地との関連)=False));"
+                    SystemDB.ExecuteSQL "UPDATE [D:農地Info] INNER JOIN ([D:個人Info] INNER JOIN [D:世帯Info] ON [D:個人Info].世帯ID = [D:世帯Info].ID) ON [D:農地Info].管理世帯ID = [D:世帯Info].ID SET [D:世帯Info].農地との関連 = True WHERE ((([D:個人Info].ID)=" & Val(Ar(n)) & ") AND (([D:世帯Info].農地との関連)=False));"
+                    SystemDB.ExecuteSQL "UPDATE [D:農地Info] INNER JOIN ([D:個人Info] INNER JOIN [D:世帯Info] ON [D:個人Info].世帯ID = [D:世帯Info].ID) ON [D:農地Info].借受世帯ID = [D:世帯Info].ID SET [D:世帯Info].農地との関連 = True WHERE ((([D:個人Info].ID)=" & Val(Ar(n)) & ") AND (([D:世帯Info].農地との関連)=False));"
+                End If
+            Next
+                        
+            mvarPDW.WaitMessage = ""
+        End If
+    End Sub
+    
+
+
+
+
+    Public Function Get受付番号Ex(ByVal s法令 As String, ByVal n総会番号 As Long) As Long
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        
+        Select Case SystemDB.DBProperty("受付番号生成ルール")
+            Case "月毎"
+                Set Rs = SystemDB.GetRecordsetEx("SELECT Max([D_申請].受付番号) AS 最大番号 FROM [D_申請] WHERE ([受付補助記号] " & IIf(IsEmpty(ADApp.User.v支所符号) Or IsNull(ADApp.User.v支所符号), "Is Null", "='" & ADApp.User.v支所符号 & "'") & ") AND ([D_申請].法令 In ( " & s法令 & " )) AND ([総会番号]=" & n総会番号 & ")", , , "申請")
+                If Not Rs.EOF Then
+                    Get受付番号Ex = IIf(Rs.IsNull("最大番号"), 0, Rs.Value("最大番号")) + 1
+                Else
+                    Get受付番号Ex = 1
+                End If
+                SystemDB.CloseRs Rs
+            Case Else
+                Set Rs = SystemDB.GetRecordsetEx("SELECT Max([D_申請].受付番号) AS 最大番号 FROM [D_申請] WHERE ([受付補助記号] " & IIf(IsEmpty(ADApp.User.v支所符号) Or IsNull(ADApp.User.v支所符号), "Is Null", "='" & ADApp.User.v支所符号 & "'") & ") AND ([D_申請].法令 In ( " & s法令 & " )) AND (DatePart('yyyy',[受付年月日])=DatePart('yyyy',Date()))", , , "申請")
+                If Not Rs.EOF Then
+                    Get受付番号Ex = IIf(Rs.IsNull("最大番号"), 0, Rs.Value("最大番号")) + 1
+                Else
+                    Get受付番号Ex = 1
+                End If
+                SystemDB.CloseRs Rs
+        End Select
+    End Function
+
+
+
+    Public Sub Sub総括表(pObj As CDataviewSK)
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim Ar As Variant
+        Dim Dt As New CDataDictionary
+        Dim St As String
+        Dim ID As Long
+        Dim n As Long
+        Dim L2 As Long
+
+        Dt.Add "ID", Fnc.GetKeyCode(pObj.Key)
+        
+        Select Case Fnc.GetKeyHead(pObj.Key)
+            Case "農家":
+                Dt.Add "KID", "管理世帯ID"
+                Dt.Add "SID", "所有世帯ID"
+                Dt.Add "RID", "借受世帯ID"
+            Case "世帯員":
+                Dt.Add "KID", "管理者ID"
+                Dt.Add "SID", "所有者ID"
+                Dt.Add "RID", "借受人ID"
+        End Select
+'        Select Case SystemDB.DBPropertyEx("ヤミ小作を小作扱いする", vbBoolean, False)
+'            Case True: Dt.Add "JSK", "[自小作別]=0": Dt.Add "KSK", "[自小作別]<>0"
+'            Case False: Dt.Add "JSK", "[自小作別]<=0": Dt.Add "KSK", "[自小作別]>0"
+'            Case Else
+'                Stop
+'        End Select
+        Dt.Add "JSK", "[自小作別]<=0": Dt.Add "KSK", "[自小作別]>0"
+        
+        Select Case Val(SystemDB.DBProperty("総括表画面に不耕作を反映しない"))
+            Case True
+                Set Rs = SystemDB.GetRecordsetEx(Dt.StrReplace( _
+                "SELECT '自作地' AS [種類],Sum(-([農委地目ID]=1)) AS 田筆数, Format$(Sum(SGN([田面積])*[登記簿面積]),'#,##0.00') AS 田面積の合計, Sum(-([農委地目ID]=2)) AS 畑筆数, Format$(Sum(SGN([畑面積])*[登記簿面積]),'#,##0.00') AS 畑面積の合計, Sum(-([D:農地Info].[樹園地]>0)) AS 樹園地筆数, Format$(Sum([D:農地Info].樹園地),'#,##0.00') AS 樹園地, Format$(Sum([D:農地Info].採草放牧面積),'#,##0.00') AS 採草放牧地,Null AS 面積計 FROM [D:農地Info] " & _
+                "WHERE (((([%DD.KID%]=0 OR [%DD.KID%] Is Null) AND [%DD.SID%]=%DD.ID%) OR ([%DD.KID%]=%DD.ID%)) AND (%DD.JSK%));"), 0, , pObj)
+                
+                Ar = Rs.FildeHeaders
+                St = Rs.GetString
+                Rs.CloseRs
+                L2 = 2
+            Case False
+                Set Rs = SystemDB.GetRecordsetEx(Dt.StrReplace( _
+                "SELECT '自作地' AS [種類],Sum(-([農委地目ID]=1)) AS 田筆数, Format$(Sum(SGN([田面積])*[登記簿面積]),'#,##0.00') AS 田面積の合計, Sum(-([農委地目ID]=2)) AS 畑筆数, Format$(Sum(SGN([畑面積])*[登記簿面積]),'#,##0.00') AS 畑面積の合計, Sum(-([D:農地Info].[樹園地]>0)) AS 樹園地筆数, Format$(Sum([D:農地Info].樹園地),'#,##0.00') AS 樹園地, Format$(Sum([D:農地Info].採草放牧面積),'#,##0.00') AS 採草放牧地,Null AS 面積計 FROM [D:農地Info] " & _
+                "WHERE (((([%DD.KID%]=0 OR [%DD.KID%] Is Null) AND [%DD.SID%]=%DD.ID%) OR ([%DD.KID%]=%DD.ID%)) AND (%DD.JSK%)) AND ([農地状況]<=19);"), 0, , pObj)
+                
+                Ar = Rs.FildeHeaders
+                St = Rs.GetString
+                Rs.CloseRs
+                
+                Set Rs = SystemDB.GetRecordsetEx(Dt.StrReplace( _
+                "SELECT '(不耕作）' AS [種類],Sum(-([農委地目ID]=1)) AS 田筆数, Format$(Sum(SGN([田面積])*[登記簿面積]),'#,##0.00') AS 田面積の合計, Sum(-([農委地目ID]=2)) AS 畑筆数, Format$(Sum(SGN([畑面積])*[登記簿面積]),'#,##0.00') AS 畑面積の合計, Sum(-([D:農地Info].[樹園地]>0)) AS 樹園地筆数, Format$(Sum([D:農地Info].樹園地),'#,##0.00') AS 樹園地, Format$(Sum([D:農地Info].採草放牧面積),'#,##0.00') AS 採草放牧地,Null AS 面積計 FROM [D:農地Info] " & _
+                "WHERE (((([%DD.KID%]=0 OR [%DD.KID%] Is Null) AND [%DD.SID%]=%DD.ID%) OR ([%DD.KID%]=%DD.ID%)) AND (%DD.JSK%)) AND ([農地状況]>19);"), 0, , pObj)
+                
+                St = St & vbCrLf & Rs.GetString
+                Rs.CloseRs
+                L2 = 3
+        End Select
+        
+        Set Rs = SystemDB.GetRecordsetEx(Dt.StrReplace( _
+        "SELECT '小作地' AS [種類],Sum(-([農委地目ID]=1)) AS 田筆数, Format$(Sum(SGN([田面積])*[登記簿面積]),'#,##0.00') AS 田面積の合計, Sum(-([農委地目ID]=2)) AS 畑筆数, Format$(Sum(SGN([畑面積])*[登記簿面積]),'#,##0.00') AS 畑面積の合計, Sum(-([樹園地]>0)) AS 樹園地筆数, Format$(Sum([D:農地Info].樹園地),'#,##0.00') AS 樹園地, Format$(Sum([D:農地Info].採草放牧面積),'#,##0.00') AS 採草放牧面積,Null AS 面積計 FROM [D:農地Info] " & _
+        "WHERE ([%DD.RID%]=%DD.ID%) AND (%DD.KSK%);"), 0, , pObj)
+        St = St & vbCrLf & Rs.GetString
+        Rs.CloseRs
+        
+        St = St & vbCrLf & "経営地 計"
+        
+        Set Rs = SystemDB.GetRecordsetEx(Dt.StrReplace( _
+        "SELECT '貸付地' AS [種類],Sum(-([農委地目ID]=1)) AS 田筆数, Format$(Sum(SGN([田面積])*[登記簿面積]),'#,##0.00') AS 田面積の合計, Sum(-([農委地目ID]=2)) AS 畑筆数, Format$(Sum(SGN([畑面積])*[登記簿面積]),'#,##0.00') AS 畑面積の合計, Sum(-([樹園地]>0)) AS 樹園地筆数, Format$(Sum([D:農地Info].樹園地),'#,##0.00') AS 樹園地, Format$(Sum([D:農地Info].採草放牧面積),'#,##0.00') AS 採草放牧面積,Null AS 面積計 FROM [D:農地Info] " & _
+        "WHERE ([%DD.SID%]=%DD.ID%) AND (%DD.KSK%);"), 0, , pObj)
+        
+        St = St & vbCrLf & "―" & vbCrLf & Rs.GetString
+        Rs.CloseRs
+        
+        Set Rs = SystemDB.GetRecordsetEx(Dt.StrReplace( _
+        "SELECT '所有地' AS [種類],Sum(-([農委地目ID]=1)) AS 田筆数, Format$(Sum(SGN([田面積])*[登記簿面積]),'#,##0.00') AS 田面積の合計, Sum(-([農委地目ID]=2)) AS 畑筆数, Format$(Sum(SGN([畑面積])*[登記簿面積]),'#,##0.00') AS 畑面積の合計, Sum(-([樹園地]>0)) AS 樹園地筆数, Format$(Sum([D:農地Info].樹園地),'#,##0.00') AS 樹園地, Format$(Sum([D:農地Info].採草放牧面積),'#,##0.00') AS 採草放牧面積,Null AS 面積計 FROM [D:農地Info] " & _
+        "WHERE ([D:農地Info].[%DD.SID%]=%DD.ID%);"), 0, , pObj)
+        St = St & vbCrLf & vbCrLf & Rs.GetString
+        Rs.CloseRs
+        
+        With mvarPDW.Gridview
+            .ClearAll
+            .Cols = UBound(Ar) + 1
+            .SetLine 0, 0, Join(Ar, vbTab), vbTab, vbCrLf
+            
+            .AddLine 1, 0, St, vbTab, vbCrLf
+            .SumLine 1, 8, GetArray(2, 4, 6, 7), 2
+            .SumLine 2, 8, GetArray(2, 4, 6, 7), 2
+            .SumLine 3, 8, GetArray(2, 4, 6, 7), 2
+            .SumLine 4, 8, GetArray(2, 4, 6, 7), 2
+            .SumLine 6, 8, GetArray(2, 4, 6, 7), 2
+            .SumLine 7, 8, GetArray(2, 4, 6, 7), 2
+            
+            For n = 1 To .Cols - 1
+                Select Case n
+                    Case 1, 3, 5
+                        .TextMatrix(L2 + 1, n) = FormatNumber(Val(Replace(.TextMatrix(1, n), ",", "")) + Val(Replace(.TextMatrix(L2, n), ",", "")), 0)
+                    Case 2, 4, 6, 7, 8
+                        .TextMatrix(L2 + 1, n) = FormatNumber(Val(Replace(.TextMatrix(1, n), ",", "")) + Val(Replace(.TextMatrix(L2, n), ",", "")), 2)
+                End Select
+            Next
+            .FitWidth
+            Set mvarPDW.TabPages.SelectedItem = mvarPDW.Gridview
+            mvarPDW.TabPages.SelectedItem.Title = "総括表(" & Fnc.GetKeyHead(pObj.Key) & ")：" & pObj.GetProperty2("氏名")
+        End With
+    End Sub
+
+    Public Sub Sub奨励金作成()
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim RsS As ADBasicLIB2.RecordsetEx
+        Dim St As String
+        Dim V As Variant
+        Dim n年齢 As Long
+        Dim n As Long
+        Dim SX As String
+        Dim s総会番号 As String
+        Dim pInputView As CInputView
+        Dim Ar As Variant
+        Dim Cm As Variant
+        Dim pDate As Date
+        
+        pDate = Date
+        If Fnc.InputDateEx("設定日", "設定日を入力してください", pDate) Then
+        Else
+            pDate = Date
+        End If
+        
+        s総会番号 = SystemDB.DBProperty("今月総会番号")
+        St = Val(s総会番号) - 1
+        St = SystemDB.GetRecordsetString("SELECT '総会番号(' & [総会番号] & ')' & [名称] & '  期間 : ' & [始期] & '～' & [終期] & ' [' & [ID] & ']' AS 文字 FROM D_申請 WHERE ([受付年月日]>=#" & DateAdd("M", -2, ADApp.Common.AppData("受付範囲")) & "#) AND (((D_申請.法令)=61) AND ((D_申請.状態)=2) AND ((D_申請.総会番号)=" & St & "));", , "", ";")
+        
+        St = Fnc.SelectMultiString(St, "奨励金の対象になる利用権設定を選択してください。")
+        If Len(St) Then
+            SystemDB.ExecuteSQL "DELETE ID FROM [D_申請] WHERE ([法令] IN (990, 991)) AND [総会番号]=" & s総会番号
+            Ar = Split(St, ";")
+            St = ""
+            SX = ""
+            For n = 0 To UBound(Ar)
+                If Len(Ar(n)) Then
+                    St = St & SX & Val(MID$(Ar(n), InStr(Ar(n), "[") + 1))
+                    SX = ","
+                End If
+            Next
+    
+            Set Rs = SystemDB.GetRecordsetEx("SELECT 申請者B,申請者A,氏名A,住所A,始期,公告年月日,農地リスト FROM [D_申請] WHERE [ID] IN (" & St & ") ORDER BY [申請者A]", 0, , "奨励金")
+            Ar = Split(Rs.GetString(), vbCrLf)
+            SystemDB.CloseRs Rs
+            
+            For n = 0 To UBound(Ar) - 1
+                If Len(Ar(n + 1)) = 0 Then
+                ElseIf Val(MID$(Ar(n), InStr(Ar(n), vbTab) + 1)) = Val(MID$(Ar(n + 1), InStr(Ar(n + 1), vbTab) + 1)) Then
+                    Cm = Split(Ar(n), vbTab)
+                    Ar(n) = ""
+                    Ar(n + 1) = Cm(0) & "," & Ar(n + 1) & ";" & Cm(6)
+                Else
+                End If
+            Next
+            For n = 0 To UBound(Ar)
+                If Len(Ar(n)) Then
+                    Cm = Split(Ar(n), vbTab)
+                    V = SystemDB.GetRecordsetString("SELECT Sum(Fix(([田面積]+[畑面積])/10)) AS アール合計 FROM V_農地 " & _
+                    "WHERE (((V_農地.管理人ID)=" & Cm(1) & ") AND ((V_農地.自小作別)>0) AND ((V_農地.小作開始年月日)=#" & Cm(4) & "#) AND ((V_農地.借受人ID) In (" & Cm(0) & ")));", , vbTab, vbCrLf)
+                    
+                    Set RsS = SystemDB.GetRecordsetEx("SELECT 生年月日 FROM [D:個人Info] WHERE [ID] = " & Cm(1), 0, , "奨励金")
+                    If RsS.EOF Then
+                        n年齢 = 0
+                    ElseIf IsNull(RsS.Value("生年月日")) Then
+                        n年齢 = 0
+                    Else
+                        n年齢 = Fnc.年齢計算(RsS.Value("生年月日"), Now())
+                    End If
+                    SystemDB.CloseRs RsS
+                    SystemDB.ExecuteSQL "INSERT INTO D_申請 (総会番号,名称,法令,状態,申請者A,氏名A,住所A,農地リスト,パラメータリスト,始期,公告年月日,条件B,数量,年齢A,受付年月日) VALUES(" & s総会番号 & ",'奨励金貸し手(" & Cm(2) & ")',990,0," & Cm(1) & ",'" & Cm(2) & "','" & Cm(3) & "','" & Cm(6) & "','" & Cm(0) & "',#" & Cm(4) & "#," & IIf(Len(Cm(5)), "#" & Cm(5) & "#", "Null") & ",5000," & Val(V) & "," & n年齢 & ",#" & Format$(pDate, "YYYY/MM/DD") & "#);"
+                End If
+            Next
+            
+            Set Rs = SystemDB.GetRecordsetEx("SELECT 申請者A,申請者B,氏名B,住所B,始期,公告年月日,Format$([D:個人Info].[認定日],'GEE') & '-' & [D:個人Info].[認定番号] AS [認定番号EX],農地リスト,[D:個人Info].[農業改善計画認定] FROM [D_申請] LEFT JOIN [D:個人Info] ON [D_申請].申請者B = [D:個人Info].ID WHERE [D_申請].[ID] IN (" & St & ") ORDER BY [申請者B]", 0, , "奨励金")
+            Ar = Split(Rs.GetString(), vbCrLf)
+            SystemDB.CloseRs Rs
+            For n = 0 To UBound(Ar) - 1
+                If Len(Ar(n + 1)) = 0 Then
+                ElseIf Val(MID$(Ar(n), InStr(Ar(n), vbTab) + 1)) = Val(MID$(Ar(n + 1), InStr(Ar(n + 1), vbTab) + 1)) Then
+                    Cm = Split(Ar(n), vbTab)
+                    Ar(n) = ""
+                    Ar(n + 1) = Cm(0) & "," & Ar(n + 1) & ";" & Cm(7)
+                Else
+                End If
+            Next
+            For n = 0 To UBound(Ar)
+                If Len(Ar(n)) Then
+                    Cm = Split(Ar(n), vbTab)
+                    V = SystemDB.GetRecordsetString("SELECT Sum(Fix(([田面積]+[畑面積])/10)) AS アール合計 FROM V_農地 " & _
+                    "WHERE (((V_農地.借受人ID)=" & Cm(1) & ") AND ((V_農地.自小作別)>0) AND ((V_農地.小作開始年月日)=#" & Cm(4) & "#) AND ((V_農地.管理人ID) In (" & Cm(0) & ")));", , vbTab, vbCrLf)
+                    Set RsS = SystemDB.GetRecordsetEx("SELECT 生年月日 FROM [D:個人Info] WHERE [ID] = " & Cm(1), 0, , "奨励金")
+                    If RsS.EOF Then
+                        n年齢 = 0
+                    ElseIf IsNull(RsS.Value("生年月日")) Then
+                        n年齢 = 0
+                    Else
+                        n年齢 = Fnc.年齢計算(RsS.Value("生年月日"), Now())
+                    End If
+                    SystemDB.CloseRs RsS
+                    SystemDB.ExecuteSQL "INSERT INTO D_申請 (総会番号,名称,法令,状態,申請者A,氏名A,住所A,農地リスト,パラメータリスト,始期,条件A,公告年月日,条件B,数量,年齢A,受付年月日) VALUES(" & s総会番号 & ",'奨励金受け手(" & Cm(2) & ")',991,0," & Cm(1) & ",'" & Cm(2) & "','" & Cm(3) & "','" & Cm(7) & "','" & Cm(0) & "',#" & Cm(4) & "#,'" & IIf(Len(Cm(6)) > 1, Cm(6), "Null") & "'," & IIf(Len(Cm(5)) > 0, "#" & Cm(5) & "#", "Null") & "," & Choose(Val(Cm(8)) + 1, "0", "5000", "3000") & "," & Val(V) & "," & n年齢 & ",#" & Format$(pDate, "YYYY/MM/DD") & "#);"
+                End If
+            Next
+        End If
+    End Sub
+
+    Public Sub Sub申請月別作成(s法令 As String)
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim St As String
+        Dim A1 As CArray
+        Dim A2 As CArray
+        Dim i As Long
+        Dim j As Long
+        
+        If InStr(s法令, "許可済") Then St = "In (" & SystemDB.DBProperty("法令" & Replace(s法令, "許可済", "")) & ")"
+        If InStr(s法令, "承認済") Then St = "In (" & SystemDB.DBProperty("法令" & Replace(s法令, "承認済", "")) & ")"
+        If InStr(s法令, "適用済") Then St = "In (" & SystemDB.DBProperty("法令" & Replace(s法令, "適用済", "")) & ")"
+        
+        Set A1 = SystemDB.GetRecordsetArray("SELECT Format$([許可年月日],IIF(Year([許可年月日])<Year(Now()),'yyyy00','yyyymm')) AS 式1 FROM D_申請 WHERE (((D_申請.法令) " & St & ") AND ((D_申請.状態)=2)) GROUP BY Format$([許可年月日],IIF(Year([許可年月日])<Year(Now()),'yyyy00','yyyymm')) ORDER BY Format$([許可年月日],IIF(Year([許可年月日])<Year(Now()),'yyyy00','yyyymm'));", , "", vbFormFeed)
+        Set A2 = SystemDB.GetRecordsetArray("SELECT Mid$([Key],Len('" & s法令 & "')+4) FROM S_Folder WHERE [Key] LIKE '" & s法令 & "%別.%';", , "", vbFormFeed)
+                
+        If Not A1 Is Nothing Then
+            For i = 0 To A1.nUBound
+                If Not A2 Is Nothing Then
+                    For j = 0 To A2.nUBound
+                        If Len(A2.str(j)) = 0 Then
+                        ElseIf A1.str(i) = A2.str(j) Then
+                            A1.Value(i) = ""
+                            A2.Value(j) = ""
+                        End If
+                    Next
+                End If
+                If Len(A1.str(i)) Then
+                    SystemDB.Execute Replace(Replace("INSERT INTO S_Folder([Key],ParentKey,表示順序,名称,Class,Icon,SelectIcon,Visible) VALUES('" & Join(GetArray(s法令 & IIf(Right$(A1.str(i), 2) = "00", "年別", "月別") & "." & A1.str(i), s法令 & ".0", 99, Left$(A1.str(i), 4) & IIf(MID$(A1.str(i), 5) = 0, "年度", "/" & MID$(A1.str(i), 5)), "年月別", "CloseFolder", "OpenFolder", -1), "','") & "');", "'99'", A1.str(i)), "'-1'", "-1")
+                End If
+            Next
+            
+            If Not A2 Is Nothing Then
+                For i = 0 To A2.nUBound
+                    If Len(A2.str(i)) Then
+                        SystemDB.Execute "DELETE * FROM [S_Folder] WHERE [Key]='" & s法令 & IIf(Right$(A2.str(i), 2) = "00", "年別", "月別") & "." & A2.str(i) & "'"
+                    End If
+                Next
+            End If
+        End If
+        
+        SystemDB.Execute "UPDATE S_Folder INNER JOIN S_Folder AS S_Folder_1 ON S_Folder.ParentKey = S_Folder_1.ParentKey SET S_Folder.表示順序 = [S_Folder_1].[表示順序]+1 WHERE (((S_Folder.Key)<>[S_Folder_1].[Key]) AND ((S_Folder.ParentKey)='" & s法令 & ".0') AND ((S_Folder.表示順序)<=[S_Folder_1].[表示順序]) AND ((S_Folder.名称)>[S_Folder_1].[名称]));"
+        SystemDB.Execute "UPDATE S_Folder INNER JOIN S_Folder AS S_Folder_1 ON S_Folder.ParentKey = S_Folder_1.ParentKey SET S_Folder.表示順序 = [S_Folder_1].[表示順序]+1 WHERE (((S_Folder.Key)<>[S_Folder_1].[Key]) AND ((S_Folder.ParentKey)='" & s法令 & ".0') AND ((S_Folder.表示順序)<=[S_Folder_1].[表示順序]) AND ((S_Folder.名称)>[S_Folder_1].[名称]));"
+        SystemDB.Execute "UPDATE S_Folder INNER JOIN S_Folder AS S_Folder_1 ON S_Folder.ParentKey = S_Folder_1.ParentKey SET S_Folder.表示順序 = [S_Folder_1].[表示順序]+1 WHERE (((S_Folder.Key)<>[S_Folder_1].[Key]) AND ((S_Folder.ParentKey)='" & s法令 & ".0') AND ((S_Folder.表示順序)<=[S_Folder_1].[表示順序]) AND ((S_Folder.名称)>[S_Folder_1].[名称]));"
+        SystemDB.Execute "UPDATE S_Folder INNER JOIN S_Folder AS S_Folder_1 ON S_Folder.ParentKey = S_Folder_1.ParentKey SET S_Folder.表示順序 = [S_Folder_1].[表示順序]+1 WHERE (((S_Folder.Key)<>[S_Folder_1].[Key]) AND ((S_Folder.ParentKey)='" & s法令 & ".0') AND ((S_Folder.表示順序)<=[S_Folder_1].[表示順序]) AND ((S_Folder.名称)>[S_Folder_1].[名称]));"
+        SystemDB.Execute "UPDATE S_Folder INNER JOIN S_Folder AS S_Folder_1 ON S_Folder.ParentKey = S_Folder_1.ParentKey SET S_Folder.表示順序 = [S_Folder_1].[表示順序]+1 WHERE (((S_Folder.Key)<>[S_Folder_1].[Key]) AND ((S_Folder.ParentKey)='" & s法令 & ".0') AND ((S_Folder.表示順序)<=[S_Folder_1].[表示順序]) AND ((S_Folder.名称)>[S_Folder_1].[名称]));"
+        SystemDB.Execute "UPDATE S_Folder INNER JOIN S_Folder AS S_Folder_1 ON S_Folder.ParentKey = S_Folder_1.ParentKey SET S_Folder.表示順序 = [S_Folder_1].[表示順序]+1 WHERE (((S_Folder.Key)<>[S_Folder_1].[Key]) AND ((S_Folder.ParentKey)='" & s法令 & ".0') AND ((S_Folder.表示順序)<=[S_Folder_1].[表示順序]) AND ((S_Folder.名称)>[S_Folder_1].[名称]));"
+        
+        mvarPDW.Folder.Redraw mvarPDW.Folder.ExpandedList
+    End Sub
+
+    Private Sub Set申請者A(Rs As ADBasicLIB2.RecordsetEx, p農家 As ADBasicLIB2.CDataviewSK)
+        Select Case Fnc.GetKeyHead(p農家.Key)
+            Case "農家"
+                Rs.Value("申請世帯A") = Fnc.GetKeyCode(p農家.Key)
+                Rs.Value("申請者A") = p農家.GetProperty2("世帯主ID")
+                Rs.Value("氏名A") = p農家.GetProperty2("世帯主名")
+                Rs.Value("職業A") = Fnc.ZeroToNull(p農家.GetProperty2("世帯主職業"))
+                Rs.Value("住所A") = Fnc.ZeroToNull(p農家.GetProperty2("住所"))
+                Rs.Value("集落A") = Fnc.ZeroToNull(p農家.GetProperty2("世帯主集落"))
+                Rs.Value("年齢A") = p農家.GetProperty2("年齢")
+            Case "世帯員"
+                Rs.Value("申請世帯A") = p農家.GetProperty2("世帯ID")
+                Rs.Value("申請者A") = Fnc.GetKeyCode(p農家.Key)
+                Rs.Value("氏名A") = p農家.GetProperty2("氏名")
+                Rs.Value("経営面積A") = Val(p農家.GetProperty2("経営面積"))
+                Rs.Value("職業A") = Fnc.ZeroToNull(p農家.GetProperty2("職業"))
+                Rs.Value("住所A") = Fnc.ZeroToNull(p農家.GetProperty2("住所"))
+                Rs.Value("集落A") = Fnc.ZeroToNull(p農家.GetProperty2("集落名"))
+                Rs.Value("年齢A") = p農家.GetProperty2("年齢")
+        End Select
+    End Sub
+
+    Private Sub Set総会番号With支所番号(Rs As ADBasicLIB2.RecordsetEx, s法令 As String)
+        Dim n総会番号 As Long
+        Dim n支所番号 As Long
+        Dim Rn As ADBasicLIB2.RecordsetEx
+        n総会番号 = Get総会番号(Now())
+        n支所番号 = SysAD.GetSettingData("農地基本台帳", "支所番号", 1)
+        
+        Set Rn = SystemDB.GetRecordsetEx("SELECT Max(D_申請.受付番号) AS 受付番号最大 FROM D_申請 WHERE (([法令] IN (" & s法令 & ")) AND ((D_申請.支所番号)=" & n支所番号 & ") AND ((D_申請.総会番号)=" & n総会番号 & "));", 0)
+        Rs.Value("総会番号") = n総会番号
+        Rs.Value("受付番号") = Val(Rn.Value("受付番号最大")) + 1
+        Rs.Value("受付年月日") = Date
+        Rs.Value("支所番号") = n支所番号
+        Rs.Value("通年受付番号") = Get受付通年番号MAX(s法令)
+        
+        SystemDB.CloseRs Rn
+    End Sub
+    
+    Private Sub sub申請基本情報の初期化(ByRef Rs As ADBasicLIB2.RecordsetEx, ByVal n法令 As Long, ByVal s名称 As String, Optional ByVal s土地リスト As String = "")
+        Rs.Value("法令") = n法令
+        Rs.Value("状態") = 0
+        Rs.Value("名称") = s名称
+        If Len(s土地リスト) Then
+            Rs.Value("農地リスト") = s土地リスト
+            Set大字地番InList Rs, s土地リスト
+        End If
+    End Sub
+    
+    Private Function Get総会番号(dt作成日 As Date) As Long
+        Get総会番号 = DateDiff("m", DateSerial(SystemDB.DBProperty("総会基準年"), SystemDB.DBProperty("総会基準月"), 20), dt作成日) + 1
+    End Function
+    
+    Public Sub Set大字地番InList(Rs As ADBasicLIB2.RecordsetEx, sList As String)
+        Dim Rg As ADBasicLIB2.RecordsetEx
+        Dim St As String
+        Dim n As Long
+        
+        If Fnc.s市町村名 = "日置市" Then Exit Sub
+        Set Rg = SystemDB.GetRecordsetEx("SELECT [D:農地Info].大字ID,[D:農地Info].小字ID, [D:農地Info].地番, [D:農地Info].ID FROM [D:農地Info] WHERE ((([D:農地Info].ID) In (" & Replace(Replace(sList, "農地.", ""), ";", ",") & "))) ORDER BY [D:農地Info].大字ID, [D:農地Info].地番;", 0)
+        If Rg.EOF Then
+            Rs.Value("申請地大字ID") = Null
+            Rs.Value("申請地地番") = Null
+        Else
+            If Rg.IsNull("小字ID") Then
+                Rs.Value("申請地大字ID") = Rg.Value("大字ID") * 1000
+            ElseIf Rg.Value("小字ID") = 0 Then
+                Rs.Value("申請地大字ID") = Rg.Value("大字ID") * 1000
+            Else
+                Rs.Value("申請地大字ID") = Rg.Value("小字ID")
+            End If
+            St = Rg.Value("地番")
+            n = InStr(St, "-")
+            If n Then
+                Rs.Value("申請地地番") = Val(Left$(Rg.Value("地番"), n - 1)) * 1000 + Val(MID$(Rg.Value("地番"), n + 1))
+            Else
+                Rs.Value("申請地地番") = Val(Rg.Value("地番")) * 1000
+            End If
+        End If
+        SystemDB.CloseRs Rg
+    End Sub
+
+    Public Function GetIDList(ByVal sKeyList As String, ByVal sKeyHead As String) As String
+        GetIDList = Replace(Replace(sKeyList, sKeyHead & ".", ""), ";", ",")
+    End Function
+
+    Public Sub Sub土地管作成(pID As Long, pMode As Long, ByVal n都道府県ID As Long, Optional ByVal n支庁郡ID As Long = 0, Optional ByVal n市町村ID As Long = 0, Optional b再作成 As Boolean = False, Optional bAuto As Boolean = False)
+        Dim Rs As ADBasicLIB2.RecordsetEx   'D_申請
+        Dim RsS As ADBasicLIB2.RecordsetEx  'D_土地管理
+        Dim SX As String
+        Dim s様式 As String
+        Dim bNew As Boolean
+        Dim n As Long
+
+        Dim n法人 As Long
+        Dim RsK As ADBasicLIB2.RecordsetEx
+        
+        Set RsK = SystemDB.GetRecordsetEx("SELECT ID FROM M_BASICALL WHERE CLASS='住民区分' And [名称] Like '%法人%'", , , "Set様式")
+            n法人 = RsK.V("ID")
+        RsK.CloseRs
+        
+        
+        Sub基本情報構築 Rs, pID
+
+        Set RsS = SystemDB.GetRecordsetEx("SELECT * FROM [D_土地管理] WHERE [ID]=" & pID, , , "土地管作成2")
+        If RsS.EOF Then RsS.AddNew
+
+        RsS.V("ID") = pID
+        Sub様式共通 Rs, RsS, s様式, n都道府県ID, n支庁郡ID, n市町村ID
+
+        Sub様式別 Rs, RsS, s様式, pID, n法人
+        
+        RsS.Update "更新日", Now
+        
+        RsS.CloseRs
+        Rs.CloseRs
+        
+        'Exit Sub
+        'Sub旧土地管出力 pID, pMode, n都道府県ID, n支庁郡ID, n市町村ID, b再作成, bAuto
+    End Sub
+    
+    Private Sub Sub基本情報構築(ByRef Rs As ADBasicLIB2.RecordsetEx, ByVal pID As Long)
+        Dim Rsx As ADBasicLIB2.RecordsetEx
+        
+        SystemDB.Parameters.Add "農家台帳.記録住民コード", Val(SystemDB.DBProperty("記録住民コード"))
+
+        Set Rs = SystemDB.GetRecordsetEx("SELECT * FROM [D_申請] WHERE [ID]=" & pID, , , "土地管作成")
+        If Rs.EOF Then
+            SystemDB.CloseRs Rs
+            Exit Sub
+        ElseIf Rs.IsNull("申請総面積計") Then
+            Set申請総面積 Rs
+        End If
+        
+        If Rs.IsNull("借入面積B") Then
+            Set Rsx = SystemDB.GetRecordsetEx("SELECT [田面積]+[畑面積] AS 面積 FROM [D:農地Info] WHERE ((([D:農地Info].借受人ID)=" & Rs.V("申請者B") & ") AND (([D:農地Info].自小作別)>0)) GROUP BY [田面積]+[畑面積];", 0, , "X")
+            If Rsx.EOF Then
+                Rs.Update "借入面積B", 0
+            Else
+                Rs.Update "借入面積B", Rsx.NullCast("面積", 0)
+            End If
+            Rsx.CloseRs
+        End If
+    
+        Set小作料 Rs
+    End Sub
+
+    Private Sub Set申請総面積(ByVal Rs As ADBasicLIB2.RecordsetEx)
+        Dim St As String
+        Dim Rsx As ADBasicLIB2.RecordsetEx
+
+        St = Fnc土地リスト(Rs.NullCast("農地リスト", ""))
+        
+        If Len(St) Then
+            Set Rsx = SystemDB.GetRecordsetEx("SELECT * FROM [U_全農地] WHERE [ID] IN (" & St & ");", 0, , "Sub")
+            If Rsx Is Nothing Then
+            Else
+                Do Until Rsx.EOF
+                    If Rsx.V("田面積") > 0 Then Rs.V("申請総面積計") = Rs.V("申請総面積計") + Rsx.V("田面積")
+                    If Rsx.V("畑面積") > 0 Then Rs.V("申請総面積計") = Rs.V("申請総面積計") + Rsx.V("畑面積")
+                    Rsx.MoveNext
+                Loop
+                Rsx.CloseRs
+            End If
+            Rs.Update
+        End If
+    End Sub
+    
+    Private Sub Set小作料(ByRef Rs As ADBasicLIB2.RecordsetEx)
+        Dim SX As String
+        Dim St As String
+        
+        If Rs.IsNull("小作料") Then
+        Else
+            St = Rs.NullCast("小作料", "0")
+            SX = Rs.NullCast("小作料単位", "")
+        
+            If St = "0" Then
+                Rs.V("小作料") = ""
+            Else
+                If InStr(SX, "") Then
+                    Rs.V("小作料") = ""
+                ElseIf InStr(SX, "") Then
+                    Rs.V("小作料") = ""
+                ElseIf InStr(SX, "") Then
+                    Rs.V("小作料") = ""
+                ElseIf InStr(SX, "") Then
+                    Rs.V("小作料") = ""
+                ElseIf SX = "円" Then
+                    Rs.V("小作料") = FormatNumber(Val(St) / 1000, 0)
+                ElseIf InStr(SX, "全部で") And InStr(SX, "円") Then
+                    St = St / Rs.NullCast("申請総面積計", 0)
+                    St = Val(St) * 1000
+                    St = Format(Val(St) / 100, 0)
+                    Rs.V("小作料") = St
+                ElseIf InStr(SX, "10a") Then
+                    Rs.V("小作料") = FormatNumber(Val(St) / 100, 0)
+                Else
+                    Debug.Print Rs.V("ID") & ":" & St
+                End If
+            End If
+        End If
+    
+    End Sub
+    
+    Private Sub Sub様式共通(ByVal Rs As ADBasicLIB2.RecordsetEx, ByRef RsS As ADBasicLIB2.RecordsetEx, ByRef s様式 As String, ByRef n都道府県ID As Long, ByRef n支庁郡ID As Long, ByRef n市町村ID As Long)
+        Dim St As String
+        
+        RsS.V("調査年") = Format(Rs.NullCast("許可年月日", 0), "EE")
+        If n都道府県ID = 0 Then RsS.V("都道府県ID") = Val(SystemDB.DBProperty("都道府県ID")) Else RsS.V("都道府県ID") = n都道府県ID
+        If n支庁郡ID = 0 Then RsS.V("支庁郡ID") = Val(SystemDB.DBProperty("支庁郡ID")) Else RsS.V("支庁郡ID") = n支庁郡ID
+        If n市町村ID = 0 Then St = SystemDB.DBProperty("市町村ID") Else St = n市町村ID
+        If Len(St) >= 3 Then
+            RsS.V("市町村ID") = Right("000" & St, 3)
+        End If
+
+        Set適用法令 Rs, RsS, s様式
+        Set権利種類 Rs, RsS
+    
+        Select Case Rs.V("法令")
+            Case 40
+                RsS.V("譲渡人") = ""
+                RsS.V("譲受人") = Rs.NullCast("氏名A", "")
+            Case 50, 51
+                If Rs.NullCast("氏名B", "") = "" Then   '単独申請
+                    RsS.V("譲渡人") = ""
+                    RsS.V("譲受人") = Rs.NullCast("氏名A", "")
+                Else
+                    RsS.V("譲渡人") = Rs.NullCast("氏名A", "")
+                    RsS.V("譲受人") = Rs.NullCast("氏名B", "")
+                End If
+            Case Else
+                RsS.V("譲渡人") = Rs.NullCast("氏名A", "")
+                RsS.V("譲受人") = Rs.NullCast("氏名B", "")
+        End Select
+        
+        RsS.Update
+    End Sub
+    
+    Private Sub Set適用法令(ByVal Rs As ADBasicLIB2.RecordsetEx, ByRef RsS As ADBasicLIB2.RecordsetEx, ByRef s様式 As String)
+        Dim s適用法令 As String
+        
+        Select Case Rs.V("法令")
+            Case state3条所有権, state3条賃借権
+                s適用法令 = "01"
+                s様式 = "1"
+            Case state県3条所有権, state県3条賃借権
+                s適用法令 = "02"
+                s様式 = "1"
+            Case state基盤利用権移転, state基盤所有権設定, state基盤利用権設定
+                s適用法令 = "08"
+                s様式 = "1"
+            Case state18条解約, state20条解約
+                s適用法令 = "11"
+                s様式 = "2"
+            Case state合意解約
+                s適用法令 = "12"
+                s様式 = "2"
+            Case state4条転用
+                s適用法令 = "21"
+                s様式 = "3"
+            Case state5条所有権, state5条賃借権
+                s適用法令 = "26"
+                s様式 = "3"
+            Case state非農地証明
+                s適用法令 = "00"
+                s様式 = "3"
+            Case 990, 991
+                s適用法令 = "00"
+                s様式 = ""
+            Case "302", "303", "500", "400"
+                s適用法令 = "00"
+                s様式 = ""
+            Case Else
+                Debug.Assert CaseAssertPrint(Rs.V("法令"))
+                s適用法令 = "00"
+                s様式 = ""
+        End Select
+        
+        RsS.V("様式") = s様式
+        RsS.V("整理番号") = SystemDB.MaxID("D_土地管理", "整理番号", "[適用法令]=" & Val(s適用法令), 0) + 1
+        RsS.V("許可受理公告年月日") = Rs.V("許可年月日")
+        
+        If s適用法令 = "00" Then s適用法令 = ""
+        RsS.V("適用法令") = s適用法令
+    
+    End Sub
+
+    Private Sub Set権利種類(ByVal Rs As ADBasicLIB2.RecordsetEx, ByRef RsS As ADBasicLIB2.RecordsetEx)
+        'If Rs.V("ID") = 2563 Then Stop
+        Select Case Rs.V("法令")
+            Case state3条所有権, state県3条所有権
+                RsS.V("権利の種類") = IIf(Val(Rs.NullCast("小作料", 0)) > 0, "01", "02")
+            Case state3条賃借権, state県3条賃借権
+                RsS.V("権利の種類") = IIf(Rs.NullCast("小作料", 0) > 0, "04", "07")
+            Case state基盤所有権設定
+                RsS.V("権利の種類") = IIf(Val(Rs.NullCast("小作料", 0)) > 0, "01", "02")
+            Case state基盤利用権移転
+    '                Stop
+                RsS.V("権利の種類") = IIf(Val(Rs.NullCast("権利種類", 0)) > 0, "06", "09")
+            Case state基盤利用権設定
+                RsS.V("権利の種類") = IIf(Rs.NullCast("小作料", 0) > 0, "04", "07")
+            Case state4条転用
+                RsS.V("権利の種類") = "35"
+            Case state5条所有権
+                RsS.V("権利の種類") = IIf(Val(Rs.V("小作料")) > 0, "31", "32")
+            Case state5条賃借権
+    '                RsS.V("権利の種類") = IIf(Rs.V("権利種類") = 1, 15, 16)
+                RsS.V("権利の種類") = IIf(Rs.NullCast("小作料", 0), "31", "32")
+            Case state18条解約, state20条解約, state合意解約
+                RsS.V("権利の種類") = "21"
+    '            Case state18条解約, state20条解約
+    '                RsS.V("権利の種類") = ""
+    '            Case state合意解約
+    '                RsS.V("権利の種類") = IIf(Rs.V("権利種類") = 1, 19, 20)
+    '            Case state非農地証明
+    '                RsS.V("権利の種類") = 17
+            Case Else
+                RsS.V("権利の種類") = ""
+    '----------------------------------------------------------------------------------------
+        End Select
+    End Sub
+    
+    Private Sub Sub様式別(ByRef Rs As ADBasicLIB2.RecordsetEx, ByRef RsS As ADBasicLIB2.RecordsetEx, ByVal s様式 As String, ByVal pID As Long, ByVal n法人 As Long)
+        Set様式 Rs, RsS, pID, s様式, n法人
+        
+        If s様式 = "" Then
+        
+        Else
+            If s様式 <> 3 Then: Sub個人法人の別 Rs, RsS, s様式, n法人
+        End If
+        
+        Set土地管一筆 Rs, RsS, s様式, pID
+    End Sub
+    
+    Private Sub Set様式(ByVal Rs As ADBasicLIB2.RecordsetEx, ByRef RsS As ADBasicLIB2.RecordsetEx, ByVal pID As Long, ByVal s様式 As String, ByVal n法人 As Long)
+        'If Rs.V("ID") = 2563 Then Stop
+        Select Case s様式
+            Case 1
+                Select Case Rs.V("法令")
+                    Case 30, 32
+                        RsS.V("下限面積該当") = "05" '1
+                        RsS.V("農地法第3条2項1・2・4号不許可の例外該当") = "01" '2
+                        RsS.V("基盤法第4条3項1号イ") = "02" '4
+                    Case 31, 33
+                        RsS.V("下限面積該当") = "05" '1
+                        RsS.V("農地法第3条2項1・2・4号不許可の例外該当") = "01" '2
+                        RsS.V("基盤法第4条3項1号イ") = "02" '4
+                        RsS.V("小作料") = IIf(Rs.V("権利種類") = 1, Rs.NullCast("小作料", 0), "") '6
+                    Case 60 To 62
+                        RsS.V("農地法第3条2項1・2・4号不許可の例外該当") = "" '2
+                        If SystemDB.GetDirectData("D:個人Info", "住民区分", Rs.V("申請者A")) = n法人 Then
+                            RsS.V("基盤法第4条3項1号イ") = "01" '4
+                        Else
+                            RsS.V("基盤法第4条3項1号イ") = "02" '4
+                        End If
+                        RsS.V("基盤法第18条3項4号ただし書き") = "02" '5
+                    Case Else
+                        RsS.V("基盤法第4条3項1号イ") = "02" '4
+                End Select
+                
+                
+                Select Case Rs.V("法令")
+                    Case state3条所有権, state県3条所有権
+                        RsS.V("始期") = "" '7
+                        RsS.V("終期") = "" '8
+                    Case state3条賃借権, state県3条賃借権
+                        RsS.V("始期") = Rs.NullCast("始期", Rs.NullCast("許可年月日", "")) '7
+                        RsS.V("終期") = Rs.NullCast("終期", "") '8
+                    Case Else
+                        RsS.V("始期") = Rs.NullCast("始期", "") '7
+                        RsS.V("終期") = Rs.NullCast("終期", "") '8
+                End Select
+                RsS.V("期間") = Get期間(Rs.NullCast("期間", "999"))  '9(不要？)
+            Case 2
+                RsS.V("根拠条項") = 0   '25
+                RsS.V("設定時期") = Get設定時期(Rs.NullCast("始期", 0))   '26
+                RsS.V("解約等の事由") = Get解約等自由(Rs.NullCast("申請理由A", ""), Rs.NullCast("申請理由B", "")) '27
+                RsS.V("離作料の有無と形態") = "" '28
+                RsS.V("再設定の状況") = Get再設定(Rs.V("法令"), Rs.V("再設定"), Rs.NullCast("申請理由A", ""), Rs.NullCast("申請理由B", "")) '29
+            Case 3
+                RsS.V("許可除外条項") = "" '31
+                RsS.V("土地利用計画の区域区分") = Get土地利用計画区域区分(Rs.V("都市計画区分")) '32
+                RsS.V("転用に伴う農用地区域除外") = "" '33
+                RsS.V("転用主体") = Get転用主体(Rs.V("氏名A")) '34
+                RsS.V("用途") = Get用途(Rs.NullCast("申請理由A", "")) '35
+                
+                RsS.V("一時転用の該当") = Get一時転用(Rs.V("法令")) '36
+                RsS.V("農地区分") = "" '37
+                RsS.V("優良農地許可の根拠") = "" '38
+        End Select
+        
+        RsS.Update
+    End Sub
+    
+    Private Sub Sub個人法人の別(ByRef Rs As ADBasicLIB2.RecordsetEx, ByRef RsS As ADBasicLIB2.RecordsetEx, ByVal b様式 As Long, Optional ByVal n法人 As Long = 0)
+        On Error Resume Next
+        RsS.V("受人個人法人の別") = Get個人法人(SystemDB.GetDirectData("D:個人Info", "住民区分", Rs.V("申請者B")), n法人, Rs.V("申請者B")) '10,21
+        RsS.V("農業生産法人以外法人等取得") = Get生産法人以外法人(RsS, Rs) '3
+        'RsS.V("農業生産法人以外法人等取得") = Get生産法人以外法人(RsS, RsS.V("受人個人法人の別"), Rs.V("法令")) '3
+        
+        'RsS.V("受人法人の形態別") = Get法人形態(Rs.NullCast("氏名B", ""))  '11,22
+        RsS.V("受人法人の形態別") = ""  '11,22
+        RsS.V("受人経営農地面積") = Get農地面積(Rs.NullCast("経営面積B", 1))      '12,23
+        If b様式 = 1 Then '様式1
+            RsS.V("受人借入農地面積") = Get農地面積(Rs.NullCast("借入面積B", 1)) '13
+            
+            RsS.V("受人経営改善計画の認定") = Get改善改善計画認定(SystemDB.GetDirectData("D:個人Info", "農業改善計画認定", Rs.V("申請者B"))) '14
+        End If
+        RsS.V("渡人個人法人の別") = Get個人法人(SystemDB.GetDirectData("D:個人Info", "住民区分", Rs.V("申請者A")), n法人, Rs.V("申請者A")) '15,24
+    
+        RsS.Update
+    End Sub
+    
+    Private Function Get期間(ByVal pDate As Date) As Long
+        Select Case pDate
+            Case 0: Get期間 = 1
+            Case Is < 3: Get期間 = 2
+            Case Is < 6: Get期間 = 3
+            Case Is < 10: Get期間 = 4
+            Case Is < 20: Get期間 = 5
+            Case Is < 30: Get期間 = 6
+            Case 999:
+            Case Else: Get期間 = 7
+        End Select
+    End Function
+    
+    Private Function Get設定時期(ByVal pDate As Date) As Long
+        Select Case pDate
+            Case 0: Get設定時期 = 5
+            Case Is < #8/1/1950#: Get設定時期 = 1
+            Case Is < #10/1/1970#: Get設定時期 = 2
+            Case Is < #1/1/2010#: Get設定時期 = 3
+            Case Is >= #1/1/2010#: Get設定時期 = 4
+            Case Else: Get設定時期 = 5
+        End Select
+    End Function
+    
+    Private Function Get解約等自由(ByVal RsA As String, ByVal RsB As String) As Long
+        Get解約等自由 = 0
+        
+        Select Case RsA
+            Case "労力拡大": Get解約等自由 = 1
+            Case "規模拡大": Get解約等自由 = 2
+            Case "期間満了": Get解約等自由 = 3
+            Case "転用のため": Get解約等自由 = 4
+            Case "その他": Get解約等自由 = 5
+        End Select
+        
+        If Get解約等自由 Then Exit Function
+        
+        Select Case RsB
+            Case "農業廃止": Get解約等自由 = 7
+            Case "経営縮小": Get解約等自由 = 8
+            Case "高齢化": Get解約等自由 = 9
+            Case "労力不足": Get解約等自由 = 10
+            Case "耕作不便・低生産のため": Get解約等自由 = 11
+            Case "その他": Get解約等自由 = 12
+        End Select
+        
+        If Get解約等自由 Then Exit Function
+        Get解約等自由 = 13
+        
+    End Function
+
+    Private Function Get再設定(ByVal n法令 As Long, ByVal B As Boolean, ByVal RsA As String, ByVal RsB As String) As Long
+        If n法令 = state基盤利用権設定 Then
+            If B Then
+                Get再設定 = 0
+            Else
+                If RsA = "期間満了に伴う再設定" And RsB = "期間満了に伴う再設定" Then
+                    Get再設定 = 1
+                ElseIf RsA = "期間満了に伴う再設定" Then
+                    Get再設定 = 2
+                Else
+                    Get再設定 = 0
+                End If
+            End If
+        Else
+            Get再設定 = 0
+        End If
+    End Function
+    
+    Private Sub Set土地管一筆(ByRef Rs As ADBasicLIB2.RecordsetEx, ByRef RsS As ADBasicLIB2.RecordsetEx, ByVal s様式 As String, ByVal pID As Long)
+        Dim Ar As Variant
+        Dim St As String
+        Dim nCnt As Long
+        Dim Rsx As ADBasicLIB2.RecordsetEx
+        Dim RsY As ADBasicLIB2.RecordsetEx  'D_土地管一筆 or D_土地管補助
+        Dim sSQL As String
+        
+        nCnt = 0
+        
+        If IsNull(Rs.V("農地リスト")) = True Then
+        
+        Else
+            St = Fnc土地リスト(Rs.V("農地リスト"))
+        End If
+        
+        If Len(St) = 0 Then Exit Sub
+        
+        Ar = Split(St, ",")
+        Select Case s様式
+            Case 1, 2   '土地管一筆
+                Set RsY = SystemDB.GetRecordsetEx("SELECT * FROM D_土地管一筆", , , "土地管一筆")
+                'Set RsY = SystemDB.GetRecordsetEx("SELECT * FROM D_土地管一筆 WHERE [土地管ID] = " & pID, , , , "土地管一筆")
+                
+                sSQL = "SELECT V_大字.大字, V_小字.小字, V_農地.地番, IIf([登記簿面積]>0,IIf(Format([登記簿面積],0)=0,1,Format([登記簿面積],0)),0) AS 面積, V_農地.農委地目ID, V_農地.農業振興地域, V_農地.都市計画法 " & _
+                       "FROM ((V_農地 LEFT JOIN V_大字 ON V_農地.大字ID = V_大字.ID) LEFT JOIN V_小字 ON V_農地.小字ID = V_小字.ID) LEFT JOIN V_農委地目 ON V_農地.農委地目ID = V_農委地目.ID " & _
+                       "WHERE V_農地.ID In(" & St & ") " & _
+                       "ORDER BY V_農地.大字ID, V_農地.小字ID, V_農地.地番, Right('000' & IIf(InStr([地番],'-'),Mid([地番],InStr([地番],'-')+1),0),3);"
+                
+                Set Rsx = SystemDB.GetRecordsetEx(sSQL, , , "様式1･2")
+                If Rsx.IsNoRecord Then
+                    Rsx.CloseRs
+                    
+                    sSQL = "SELECT V_大字.大字, V_小字.小字, V_転用農地.地番, IIf([登記簿面積]>0,IIf(Format([登記簿面積],0)=0,1,Format([登記簿面積],0)),0) AS 面積, V_転用農地.農委地目ID, V_転用農地.農業振興地域, V_転用農地.都市計画法 " & _
+                           "FROM ((V_転用農地 LEFT JOIN V_大字 ON V_転用農地.大字ID = V_大字.ID) LEFT JOIN V_小字 ON V_転用農地.小字ID = V_小字.ID) LEFT JOIN V_農委地目 ON V_転用農地.農委地目ID = V_農委地目.ID " & _
+                           "WHERE V_転用農地.ID In(" & St & ") " & _
+                           "ORDER BY V_転用農地.大字ID, V_転用農地.小字ID, V_転用農地.地番, Right('000' & IIf(InStr([地番],'-'),Mid([地番],InStr([地番],'-')+1),0),3);"
+                    
+                    Set Rsx = SystemDB.GetRecordsetEx(sSQL, , , "様式1･2")
+                    If Rsx.IsNoRecord Then
+                        Rsx.CloseRs
+                        RsY.CloseRs
+                        
+                        Debug.Print "土地管作成中:" & pID & " データエラー"
+                        Exit Sub
+                    End If
+                End If
+                
+                Do Until UBound(Ar) < nCnt
+                    nCnt = nCnt + 1
+                    
+                    RsY.AddNew
+                        RsY.V("土地管ID") = pID
+                        RsY.V("筆通し番号") = nCnt
+                        RsY.V("大字") = Rsx.V("大字")
+                        RsY.V("小字") = Rsx.V("小字")
+                        RsY.V("地番") = Rsx.V("地番")
+                        RsY.V("区域区分・地目") = Get区域区分地目(Rsx)
+                        RsY.V("面積") = Rsx.NullCast("面積", "")
+                        
+                        If s様式 = 1 Then RsY.V("賃借料情報区分") = "99"
+                        RsY.V("更新日") = Now
+                    RsY.Update
+                    
+                    Rsx.MoveNext
+                Loop
+                Rsx.CloseRs
+                RsY.CloseRs
+            Case 3  '土地管補助
+                Set RsY = SystemDB.GetRecordsetEx("SELECT * FROM D_土地管補助", , , "土地管補助")
+                'Set RsY = SystemDB.GetRecordsetEx("SELECT * FROM D_土地管補助 WHERE [土地管ID] = " & pID, , , , "土地管補助")
+                
+                sSQL = "SELECT IIf([登記簿面積]>0,IIf(Format([登記簿面積],0)=0,1,Format([登記簿面積],0)),0) AS 面積, V_転用農地.農委地目ID, V_転用農地.農業振興地域, V_転用農地.都市計画法 " & _
+                       "FROM ((V_転用農地 LEFT JOIN V_大字 ON V_転用農地.大字ID = V_大字.ID) LEFT JOIN V_小字 ON V_転用農地.小字ID = V_小字.ID) LEFT JOIN V_農委地目 ON V_転用農地.農委地目ID = V_農委地目.ID " & _
+                       "WHERE (((V_転用農地.ID) In (" & St & "))) " & _
+                       "ORDER BY V_転用農地.大字ID, V_転用農地.小字ID, V_転用農地.地番, Right('000' & IIf(InStr([地番],'-'),Mid([地番],InStr([地番],'-')+1),0),3);"
+                
+                Set Rsx = SystemDB.GetRecordsetEx(sSQL, , , "様式3")
+                Do Until UBound(Ar) < nCnt
+                    nCnt = nCnt + 1
+                    
+                    RsY.AddNew
+                        RsY.V("土地管ID") = pID
+                        RsY.V("補助番号") = nCnt
+                        RsY.V("区域区分・地目") = Get区域区分地目(Rsx)
+                        RsY.V("面積") = Rsx.NullCast("面積", 0)
+                        RsY.V("更新日") = Now
+                    RsY.Update
+                    
+                    Rsx.MoveNext
+                Loop
+                
+                Rsx.CloseRs
+                RsY.CloseRs
+        End Select
+    End Sub
+    
+    Private Function Get区域区分地目(ByVal Rsx As ADBasicLIB2.RecordsetEx) As String
+        If Rsx.V("農業振興地域") = 1 Then
+            If Rsx.V("農委地目ID") = 1 Then
+                Get区域区分地目 = "01"
+            ElseIf Rsx.V("農委地目ID") = 2 Then
+                Get区域区分地目 = "02"
+            ElseIf Rsx.V("農委地目ID") = -201 Then
+                Get区域区分地目 = "03"
+            Else
+                Get区域区分地目 = "01"
+            End If
+        ElseIf Rsx.V("都市計画法") = 4 Then
+            If Rsx.V("農委地目ID") = 1 Then
+                Get区域区分地目 = "06"
+            ElseIf Rsx.V("農委地目ID") = 2 Then
+                Get区域区分地目 = "07"
+            ElseIf Rsx.V("農委地目ID") = -201 Then
+                Get区域区分地目 = "08"
+            Else
+                Get区域区分地目 = "01"
+            End If
+        Else
+            If Rsx.V("農委地目ID") = 1 Then
+                Get区域区分地目 = "11"
+            ElseIf Rsx.V("農委地目ID") = 2 Then
+                Get区域区分地目 = "12"
+            ElseIf Rsx.V("農委地目ID") = -201 Then
+                Get区域区分地目 = "13"
+            Else
+                Get区域区分地目 = "01"
+            End If
+        End If
+    End Function
+   
+    Private Function Get生産法人以外法人(ByVal RsS As ADBasicLIB2.RecordsetEx, ByVal Rs As ADBasicLIB2.RecordsetEx) As String
+        Dim s個人法人 As String
+        Dim n法令 As Long
+        
+        s個人法人 = RsS.V("受人個人法人の別")
+        n法令 = Rs.V("法令")
+        
+        Select Case n法令
+            Case 30, 32
+                If s個人法人 = "01" Then
+                    Get生産法人以外法人 = ""
+                Else
+                    Get生産法人以外法人 = ""
+                End If
+            Case 31, 33
+                If s個人法人 = "01" Then
+                    Get生産法人以外法人 = "01"
+                Else
+                    Get生産法人以外法人 = "01"
+                End If
+            Case 60 To 62
+                Select Case RsS.V("適用法令")
+                    Case 3 To 7
+                    Case Else
+                        Select Case RsS.V("権利の種類")
+                            Case "01", "02", "03", "06", "09", "10", "12"
+                            Case Else
+                                If s個人法人 = "01" Then
+                                    Get生産法人以外法人 = "01"
+                                Else
+                                    Get生産法人以外法人 = "01"
+                                End If
+                        End Select
+                End Select
+                
+            Case Else
+                Get生産法人以外法人 = ""
+        End Select
+        
+    End Function
+    
+    Private Function Get土地利用計画区域区分(ByVal n区分 As Long) As String
+        Select Case n区分
+            Case 0: Get土地利用計画区域区分 = "05"
+            Case 3: Get土地利用計画区域区分 = "02"
+            Case 4: Get土地利用計画区域区分 = "01"
+            Case Else: Get土地利用計画区域区分 = ""
+        End Select
+    End Function
+    
+    Private Function Get転用主体(ByVal s氏名 As String) As String
+        If InStr(s氏名, "（独）") Or InStr(s氏名, "独立法人") Then
+            Get転用主体 = "04"
+        ElseIf InStr(s氏名, "農協") Or InStr(s氏名, "農業協同組合") Then
+            Get転用主体 = "07"
+        ElseIf InStr(s氏名, "学校法人") Or InStr(s氏名, "医療法人") Or InStr(s氏名, "会社") Then
+            Get転用主体 = "08"
+        Else
+            Get転用主体 = "09"
+        End If
+    End Function
+    
+    Private Function Get用途(ByVal St As String) As String
+        If InStr(St, "農家住宅") Then
+            Get用途 = "01"
+        ElseIf InStr(St, "一般住宅") Then
+            Get用途 = "02"
+        ElseIf InStr(St, "集団住宅") Or InStr(St, "共同住宅") Then
+            Get用途 = "03"
+        ElseIf InStr(St, "学校用地") Then
+            Get用途 = "11"
+        ElseIf InStr(St, "公園") Or InStr(St, "運動場") Then
+            Get用途 = "12"
+        ElseIf InStr(St, "道水路") Or InStr(St, "鉄道用地") Then
+            Get用途 = "13"
+        ElseIf InStr(St, "保健施設") Then
+            Get用途 = "14"
+        ElseIf InStr(St, "ゴルフ場") Then
+            Get用途 = "33"
+        ElseIf InStr(St, "駐車場") Then
+            Get用途 = "42"
+        ElseIf InStr(St, "採取") Then
+            Get用途 = "43"
+        ElseIf InStr(St, "植林") Then
+            Get用途 = "51"
+        ElseIf InStr(St, "牛舎") Or InStr(St, "豚舎") Or InStr(St, "鶏舎") Then
+            Get用途 = "72"
+        Else
+            Get用途 = ""
+        End If
+    End Function
+    
+    Private Function Get一時転用(ByVal n As Long) As String
+        If n = 50 Or n = 51 Then
+            Get一時転用 = "01"
+        Else
+            Get一時転用 = "02"
+        End If
+    End Function
+    
+    Private Function Get個人法人(ByVal n住民 As Long, ByVal n法人 As Long, ByVal n個人 As Long) As String
+        If SystemDB.DBProperty("記録住民ID") = n住民 Then
+            Get個人法人 = "01"
+        ElseIf n法人 = SystemDB.GetDirectData("D:個人Info", "住民区分", n住民) Then
+            Get個人法人 = "02"
+        Else
+            Get個人法人 = "01"
+        End If
+    End Function
+    
+    Private Function Get法人形態(ByVal St As String) As String
+        If InStr(St, "株式会社") Then
+            Get法人形態 = "01"
+        ElseIf InStr(St, "特例有限会社") Then
+            Get法人形態 = "02"
+        ElseIf InStr(St, "合資") Or InStr(St, "合名") Or InStr(St, "合同") Then
+            Get法人形態 = "03"
+        ElseIf InStr(St, "農事組合法人") Then
+            Get法人形態 = "04"
+        ElseIf InStr(StrConv(St, vbNarrow), "NPO法人") Then
+            Get法人形態 = "05"
+        ElseIf InStr(St, "農協") Or InStr(St, "農協連合会") Then
+            Get法人形態 = "06"
+        ElseIf InStr(St, SystemDB.DBProperty("市町村名")) Then
+            Get法人形態 = "07"
+        ElseIf InStr(St, "財団法人") Or InStr(St, "社団法人") Then
+            Get法人形態 = "08"
+        ElseIf InStr(St, "学校") Or InStr(St, "医療") Or InStr(St, "社会福祉法人") Then
+            Get法人形態 = "09"
+        Else
+            Get法人形態 = ""
+        End If
+    End Function
+    
+    Private Function Get農地面積(ByVal n面積 As Long) As String
+        Select Case n面積
+            Case 0: Get農地面積 = "01"
+            Case Is < 3000: Get農地面積 = "02"
+            Case Is < 5000: Get農地面積 = "03"
+            Case Is < 10000: Get農地面積 = "04"
+            Case Is < 20000: Get農地面積 = "05"
+            Case Is < 30000: Get農地面積 = "06"
+            Case Is < 40000: Get農地面積 = "07"
+            Case Is < 50000: Get農地面積 = "08"
+            Case Is < 100000: Get農地面積 = "09"
+            Case Is < 150000: Get農地面積 = "10"
+            Case Is < 200000: Get農地面積 = "11"
+            Case Is < 300000: Get農地面積 = "12"
+            Case Is < 500000:  Get農地面積 = "13"
+            Case Is < 1000000: Get農地面積 = "14"
+            Case Is >= 1000000: Get農地面積 = "15"
+        End Select
+    End Function
+    
+    Private Function Get改善改善計画認定(ByVal n As Long) As String
+        Select Case n
+            Case 0, 2: Get改善改善計画認定 = "02"
+            Case Else: Get改善改善計画認定 = "01"
+        End Select
+    End Function
+    
+    Private Function fnc土地管用変換テーブル作成(sClass As String, s文字 As String, Optional AutoMaker As Boolean = False) As Long
+        Dim RsG As ADBasicLIB2.RecordsetEx
+        On Error Resume Next
+        Set RsG = SystemDB.GetRecordsetEx("SELECT [AN1] FROM [S_変換マスタ] WHERE [Class]='" & sClass & "' AND [BS1] LIKE '%" & s文字 & "%';", 0, , "土地管")
+        If Not RsG.EOF Then
+            fnc土地管用変換テーブル作成 = RsG.V("AN1")
+        ElseIf AutoMaker Then
+        
+        ElseIf MsgBox("[" & s文字 & "]に対する変換コードが見つかりませんでした。" & vbCrLf & "対応コードを入力しますか", vbYesNo) = vbYes Then
+            fnc土地管用変換テーブル作成 = Fnc.InputNumeric("入力", "対応するコードを入力してください", "用途コード")
+            SystemDB.ExecuteSQL "INSERT INTO S_変換マスタ ( Class, BS1, AN1 ) VALUES('" & sClass & "', '" & s文字 & "', " & fnc土地管用変換テーブル作成 & ");"
+        End If
+        
+        RsG.CloseRs
+    End Function
+     
+    Private Sub Set対価(Rs As ADBasicLIB2.RecordsetEx, RsS As ADBasicLIB2.RecordsetEx, R As Single)
+        Dim n As Long
+        If Rs.NullCast("小作料", 0) > 100000 Then R = 1
+        If Rs.NullCast("申請総面積計", 1) = 1 Then
+        Else
+            n = Rs.NullCast("小作料", 0) * R / Rs.NullCast("申請総面積計", 1) * 1000
+        End If
+        Select Case n / 10000
+            Case 0: RsS.Value("地価") = Null
+            Case Is < 30: RsS.Value("地価") = 1
+            Case 30 To 50: RsS.Value("地価") = 2
+            Case 50 To 70: RsS.Value("地価") = 3
+            Case 70 To 100: RsS.Value("地価") = 4
+            Case 100 To 150: RsS.Value("地価") = 5
+            Case 150 To 200: RsS.Value("地価") = 6
+            Case 200 To 300: RsS.Value("地価") = 7
+            Case 300 To 500: RsS.Value("地価") = 8
+            Case 500 To 700: RsS.Value("地価") = 9
+            Case 700 To 1000: RsS.Value("地価") = 10
+            Case 1000 To 1500: RsS.Value("地価") = 11
+            Case Is > 1500: RsS.Value("地価") = 12
+            Case Else: RsS.Value("地価") = Null
+        End Select
+    End Sub
+
+    Private Sub 様式1事由設定(ByVal s事由 As String, RsS As ADBasicLIB2.RecordsetEx, n有償無償 As Long, n法令 As Long)
+    '旧土地管事由--------------------------------------------------------------------------------------
+        Select Case n有償無償
+            Case 0:
+                Select Case s事由
+                    Case "自作地相互の交換", "自作地以外との交換": RsS.Value("事由") = 30
+                    Case "資金を必要とする為": RsS.Value("事由") = 10
+                    Case "療養その他生活資金": RsS.Value("事由") = 13
+                    Case "その他資金": RsS.Value("事由") = 14
+                    Case "贈与": RsS.Value("事由") = 25
+                    Case "農業廃止": RsS.Value("事由") = 30
+                    Case "相手方の要望": RsS.Value("事由") = 30
+                    Case "共有物分割": RsS.Value("事由") = 14
+                    Case "不要農地（不在村）": RsS.Value("事由") = 14
+                    Case "労力不足": RsS.Value("事由") = 8
+                    Case "経営移譲（貸付地所有権移転）": RsS.Value("事由") = 24
+                    Case Else
+                        'Debug.Assert CaseAssertPrint(s事由)
+                        RsS.Value("事由") = 30
+                End Select
+            Case 1:
+                Select Case s事由
+                    Case "資金を必要とする為": RsS.Value("事由") = 10
+                    Case "療養その他生活資金": RsS.Value("事由") = 13
+                    Case "その他資金": RsS.Value("事由") = 14
+                    Case "農業廃止": RsS.Value("事由") = 32
+                    Case "相手方の要望", "相手方要望":
+                        Select Case n法令
+                            Case 30, 32: RsS.Value("事由") = 14
+                            Case Else: RsS.Value("事由") = 38
+                        End Select
+                    Case "不要農地（不在村）": RsS.Value("事由") = 30
+                    Case "労力不足": RsS.Value("事由") = 8
+                    Case Else
+                        Select Case n法令
+                            Case 30, 32:
+                                RsS.Value("事由") = 14
+                        End Select
+'                        Debug.Assert CaseAssertPrint(s事由)
+                End Select
+            Case 2:
+                Select Case s事由
+                    Case "農業廃止": RsS.Value("事由") = 32
+                    Case "労力不足": RsS.Value("事由") = 35
+                    Case "相手方の要望": RsS.Value("事由") = 38
+                    Case "不要農地（不在村）": RsS.Value("事由") = 39
+                    Case "経営移譲（追加取得農地の移譲）": RsS.Value("事由") = 31
+                    Case "経営移譲": RsS.Value("事由") = 31
+                    Case Else
+     '                       Debug.Assert CaseAssertPrint(s事由)
+                        RsS.Value("事由") = 39
+                End Select
+            
+    '                Case "", "贈与"
+    '                Case Else
+    '            End Select
+       End Select
+    '--------------------------------------------------------------------------------------旧土地管事由
+    End Sub
+
+    Private Sub Set旧個人法人の別(RsS As ADBasicLIB2.RecordsetEx, Rs As ADBasicLIB2.RecordsetEx)
+        Dim Rsx As ADBasicLIB2.RecordsetEx
+        Dim n As Long
+        
+        Set Rsx = SystemDB.GetRecordsetEx("SELECT * FROM [D:個人Info] WHERE [ID]=" & Rs.Value("申請者A"), 0, , "X")
+        If Rsx.EOF Then
+            n = 0
+        ElseIf Rsx.Value("性別") = 0 Or Rsx.Value("性別") = 1 Then
+            RsS.Value("渡人個人法人の別") = 1
+            n = Rsx.Value("世帯ID")
+        Else
+            RsS.Value("渡人個人法人の別") = 1
+        End If
+        Rsx.CloseRs
+        
+        Select Case Rs.Value("経営面積A")
+            Case 0: RsS.Value("渡人経営農地面積") = 1
+            Case Is < 3000: RsS.Value("渡人経営農地面積") = 2
+            Case Is < 5000: RsS.Value("渡人経営農地面積") = 3
+            Case Is < 7000: RsS.Value("渡人経営農地面積") = 4
+            Case Is < 10000: RsS.Value("渡人経営農地面積") = 5
+            Case Is < 15000: RsS.Value("渡人経営農地面積") = 6
+            Case Is < 20000: RsS.Value("渡人経営農地面積") = 7
+            Case Is < 25000: RsS.Value("渡人経営農地面積") = 8
+            Case Is < 30000: RsS.Value("渡人経営農地面積") = 9
+            Case Is < 50000: RsS.Value("渡人経営農地面積") = 10
+            Case Is < 75000: RsS.Value("渡人経営農地面積") = 11
+            Case Is < 10000: RsS.Value("渡人経営農地面積") = 12
+            Case Is < 15000: RsS.Value("渡人経営農地面積") = 13
+            Case Is >= 15000: RsS.Value("渡人経営農地面積") = 14
+            Case Else: RsS.Value("渡人経営農地面積") = 1
+        End Select
+        
+        Set Rsx = SystemDB.GetRecordsetEx("SELECT * FROM [D:個人Info] WHERE [ID]=" & Rs.Value("申請者B"), 0, , "X")
+        RsS.Value("受人中核農家") = 2
+        RsS.Value("受人主たる作目") = 6
+        If Rsx.EOF Then
+        ElseIf Rsx.Value("世帯ID") = n And n <> 0 Then
+            RsS.Value("受人個人法人の別") = 1
+        ElseIf Rsx.Value("性別") = 0 Or Rsx.Value("性別") = 1 Then
+            RsS.Value("受人個人法人の別") = 3
+            If Rsx.IsNull("農業改善計画認定") Then
+                RsS.Value("受人経営改善計画の認定") = 2
+            ElseIf Val(Rsx.Value("農業改善計画認定")) > 0 Then
+                RsS.Value("受人経営改善計画の認定") = 1
+            Else
+                RsS.Value("受人経営改善計画の認定") = 2
+            End If
+        Else
+            RsS.Value("受人個人法人の別") = 2
+            RsS.Value("受人経営改善計画の認定") = 2
+        End If
+        Rsx.CloseRs
+        
+        Select Case Rs.Value("経営面積B")
+            Case 0: RsS.Value("受人借入農地面積") = 1
+            Case Is < 1000: RsS.Value("受人借入農地面積") = 2
+            Case Is < 3000: RsS.Value("受人借入農地面積") = 3
+            Case Is < 5000: RsS.Value("受人借入農地面積") = 4
+            Case Is < 7000: RsS.Value("受人借入農地面積") = 5
+            Case Is < 10000: RsS.Value("受人借入農地面積") = 6
+            Case Is < 20000: RsS.Value("受人借入農地面積") = 7
+            Case Is < 30000: RsS.Value("受人借入農地面積") = 8
+            Case Is < 50000: RsS.Value("受人借入農地面積") = 9
+            Case Is >= 50000: RsS.Value("受人借入農地面積") = 10
+            Case Else: RsS.Value("受人借入農地面積") = 1
+        End Select
+    
+    End Sub
+    
+    Public Function pFormatN(pData As Currency) As String
+        Dim St As String
+        Dim StX As String
+        
+        St = CStr(Fix(pData))
+        StX = ""
+        If Len(St) > 3 Then
+            Do While Len(St)
+                StX = Right(St, 3) & IIf(Len(StX), "," & StX, "")
+                If Len(St) > 3 Then
+                    St = Left(St, Len(St) - 3)
+                Else
+                    St = ""
+                End If
+            Loop
+        Else
+            StX = St
+        End If
+        If pData = Fix(pData) Then
+            pFormatN = StX
+        Else
+            pFormatN = StX & "." & MID(CStr(pData - Fix(pData)), 3)
+        End If
+    End Function
+
+    Public Sub SubMakeTable(sTitle As String, sSQL As String)
+        Dim Ar As Variant
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim St As String
+        Dim n As Long
+        
+        Set Rs = SystemDB.GetRecordsetEx(sSQL, 0, , sTitle)
+        
+        Ar = Rs.FildeHeaders
+        St = Rs.GetString
+        Rs.CloseRs
+        
+        With mvarPDW.Gridview
+            .ClearAll
+            .Cols = UBound(Ar) + 1
+            .SetLine 0, 0, Join(Ar, vbTab), vbTab, vbCrLf
+            .AddLine 1, 0, St, vbTab, vbCrLf
+            .TextMatrix(.Rows - 1, 0) = "合計"
+            For n = 1 To .Cols - 1
+                .Sum 1, n, .Rows - 2, n, .Rows - 1, n, "#,##0.00"
+            Next
+            .FitWidth
+        End With
+        
+        Set mvarPDW.TabPages.SelectedItem = mvarPDW.Gridview
+        mvarPDW.TabPages.SelectedItem.Title = sTitle
+    End Sub
+
+    Public Sub subOBJ削除(ByVal sTitle As String, ByVal sMessage As String, ByVal sSQL As String, ByVal pObj As CDataviewSK)
+        If MsgBox(sMessage, vbYesNo, sTitle) = vbYes Then
+            pObj.DoCommand2 "閉じる"
+            SystemDB.ExecuteSQL sSQL, , , pObj.DVProperty
+            mvarPDW.SQLListview.Refresh
+        End If
+    End Sub
+
+    Public Sub sub同一地番の整合性()
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim 大字ID As Long
+        Dim s地番 As String
+        Dim St As String
+        Dim Ar As Variant
+        Dim n As Long
+        Dim n登記面積 As Variant
+        Dim n現況合計 As Variant
+        Set Rs = SystemDB.GetRecordsetEx("SELECT [D:農地Info].ID, [D:農地Info].大字ID, [D:農地Info].地番, [D:農地Info].登記簿面積, [D:農地Info].所有者ID, [D:農地Info].実面積, [D:農地Info].一部現況, [D:農地Info].所在, [D:農地Info].自小作別 FROM [D:農地Info] WHERE ((([D:農地Info].大字ID) In (SELECT [大字ID] FROM [D:農地Info] As Tmp GROUP BY [大字ID],[地番] HAVING Count(*)>1  And [地番] = [D:農地Info].[地番])) AND (([D:農地Info].一部現況)=0 Or ([D:農地Info].一部現況) Is Null)) ORDER BY [D:農地Info].大字ID, [D:農地Info].地番, [D:農地Info].実面積 DESC;", , , "同一地番の整合性")
+        
+        大字ID = 0
+        s地番 = ""
+        n登記面積 = 0
+        n現況合計 = 0
+        St = ""
+        Do Until Rs.EOF
+            If 大字ID = 0 And s地番 = "" Then
+                大字ID = Rs.V("大字ID")
+                s地番 = Rs.V("地番")
+                n登記面積 = Rs.V("登記簿面積")
+                n現況合計 = Rs.V("実面積")
+            ElseIf 大字ID <> Rs.V("大字ID") Or s地番 <> Rs.V("地番") Or n登記面積 <> Rs.V("登記簿面積") Then
+                If n登記面積 * 10 >= n現況合計 Then
+                    St = St & vbBack & 大字ID & ";" & s地番 & ";" & n登記面積
+                End If
+                
+                大字ID = Rs.V("大字ID")
+                s地番 = Rs.V("地番")
+                n登記面積 = Rs.V("登記簿面積")
+                n現況合計 = Rs.V("実面積")
+            Else
+                n現況合計 = n現況合計 + Rs.V("実面積")
+            End If
+        
+            Rs.MoveNext
+        Loop
+        
+        If n登記面積 * 10 >= n現況合計 Then
+            St = St & vbBack & 大字ID & ";" & s地番 & ";" & n登記面積
+        End If
+        
+        St = St & vbBack
+        Rs.MoveFirst
+        n = 1
+        大字ID = 0
+        s地番 = ""
+        Do Until Rs.EOF
+            If InStr(St, vbBack & Rs.V("大字ID") & ";" & Rs.V("地番") & ";" & Rs.V("登記簿面積") & vbBack) Then
+                If 大字ID = 0 And s地番 = "" Then
+                    大字ID = Rs.V("大字ID")
+                    s地番 = Rs.V("地番")
+                    n登記面積 = Rs.V("登記簿面積")
+                    Rs.Update "一部現況", n: n = n + 1
+                ElseIf 大字ID <> Rs.V("大字ID") Or s地番 <> Rs.V("地番") Or n登記面積 <> Rs.V("登記簿面積") Then
+                    n = 1
+                    大字ID = Rs.V("大字ID")
+                    s地番 = Rs.V("地番")
+                    n登記面積 = Rs.V("登記簿面積")
+                    Rs.Update "一部現況", n: n = n + 1
+                Else
+                    Rs.Update "一部現況", n: n = n + 1
+                End If
+            End If
+            Rs.MoveNext
+        Loop
+        Rs.CloseRs
+    End Sub
+    
+ 
+    'ドラッグドロップなどで一括して貸借を設定し、その履歴も同時作成する
+    Public Sub Sub一括貸借設定(ByVal sList As String, n世帯ID As Long, n個人ID As Long)
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim vDate As Date
+        Dim n As Long
+        Dim St As String
+        Dim s内容 As String
+        Dim sSQL As String
+        Dim s小作料 As String
+        
+    '初期化
+        St = Replace(Replace(sList, "農地.", ""), ";", ",")
+        vDate = DateSerial(Year(Date), Month(Date), 1)
+        SystemDB.ExecuteSQL "UPDATE [D:農地Info] SET [D:農地Info].採草放牧面積 = 0 WHERE ((([D:農地Info].採草放牧面積) Is Null));"
+
+        Set Rs = SystemDB.GetRecordsetEx("SELECT Sum([田面積]+[畑面積]+[樹園地]+[採草放牧面積]) AS 面計 FROM [D:農地Info] WHERE ((([D:農地Info].ID) In (" & St & ")));", 0, , "Sub一括貸借設定")
+            n = Rs.V("面計")
+        Rs.CloseRs
+        s小作料 = Replace(SystemDB.DBProperty("小作料単位"), ";", ",")
+
+        With Fnc.InputMulti("職権による貸借の設定", "各条件を入力してください。終了日または貸借期間のいずれかを入力してください。", Replace("開始年月日;日付;%日付%|期間（年）;数値;0|終了年月日;日付;%日付%|適用法令;文字選択;;;農地法,基盤強化法,その他|面積計;数値;" & n & "|小作料;数値;0|単位;文字選択;;;" & s小作料, "%日付%", vDate), , True)
+            If .IsALLEmpty() Then
+            ElseIf MsgBox("貸借を設定しますか?", vbYesNo) = vbNo Then
+            Else
+                sSQL = "[自小作別]=1,[借受世帯ID]=" & n世帯ID & ", [借受人ID]=" & n個人ID
+                If .IsDate("開始年月日") Then sSQL = sSQL & ", [小作開始年月日]=#" & .Item("開始年月日") & "#": s内容 = Format(.Item("開始年月日"), "GEE/MM/DD")
+                If Val(.Item("期間（年）")) > 0 Then
+                    vDate = DateAdd("yyyy", .Item("期間（年）"), .Item("開始年月日")) - 1
+                    sSQL = sSQL & ", [小作終了年月日]=#" & vDate & "#"
+                    s内容 = s内容 & "～" & Format(vDate, "GEE/MM/DD")
+                ElseIf .IsDate("終了年月日") Then
+                    sSQL = sSQL & ", [小作終了年月日]=#" & .Item("終了年月日") & "#"
+                    s内容 = s内容 & "～" & Format(.Item("終了年月日"), "GEE/MM/DD")
+                End If
+                If .Item("適用法令") > 0 Then
+                    Select Case .Item("適用法令")
+                        Case "農地法": sSQL = sSQL & ", [小作地適用法]=1": s内容 = "農地法で、" & s内容
+                        Case "基盤強化法": sSQL = sSQL & ", [小作地適用法]=2": s内容 = "基盤強化法で、" & s内容
+                        Case "その他": sSQL = sSQL & ", [小作地適用法]=3": s内容 = "その他で、" & s内容
+                    End Select
+                Else
+                    sSQL = sSQL & ", [小作地適用法]=2"
+                End If
+                If Not .IsNull("小作料") Then
+                    Select Case .Item("単位")
+                        Case "円(全体額)": sSQL = sSQL & ", [小作形態]=1, [小作料]=" & Fix(Val(.Item("小作料")) / IIf(n = 0, .Item("小作料") / 10, n) * 1000) & ", [小作料単位]='円/10a'"
+                        Case "円/10a": sSQL = sSQL & ", [小作形態]=1, [小作料]=" & .Item("小作料") & ", [小作料単位]='円/10a'"
+                        Case Else:
+                            If .Item("小作料") = 0 Then
+                                sSQL = sSQL & ", [小作形態]=2, [小作料]=0, [小作料単位]=Null"
+                            Else
+                                sSQL = sSQL & ", [小作形態]=1, [小作料]=" & .Item("小作料")
+                                If Len(.Item("単位")) > 0 Then
+                                    sSQL = sSQL & ", [小作料単位]='" & .Item("単位") & "'"
+                                    If InStr(s小作料, .Item("単位")) = 0 Then
+                                        s小作料 = .Item("単位") & "," & s小作料
+                                        SystemDB.DBProperty("小作料単位") = Replace(s小作料, ",", ";")
+                                    End If
+                                Else
+                                    sSQL = sSQL & ", [小作料単位]=Null"
+                                End If
+                            End If
+                    End Select
+                Else
+                    sSQL = sSQL & ", [小作形態]=2, [小作料]=0, [小作料単位]=Null"
+                End If
+                s内容 = "[" & SystemDB.GetDirectData("D:個人Info", "氏名", n個人ID) & "]へ" & s内容 & "、貸借設定"
+
+                SystemDB.ExecuteSQL "INSERT INTO D_土地履歴 ( LID, 更新日, 異動日, 異動事由, 内容 ) SELECT [D:農地Info].ID, Date() AS 式1, Date() AS 式2, 99784 AS 式3, '" & s内容 & "' AS 式4 FROM [D:農地Info] WHERE ([D:農地Info].自小作別 < 1 OR [D:農地Info].自小作別=Null) AND ((([D:農地Info].ID) In (" & St & ")));"
+                SystemDB.ExecuteSQL "UPDATE [D:農地Info] SET " & sSQL & " WHERE ([D:農地Info].自小作別 < 1 OR [D:農地Info].自小作別=Null) AND [D:農地Info].ID IN (" & St & ")"
+            End If
+        End With
+    End Sub
+
+    '/** 農地0001-0001-0001 ******** 世帯一覧 *************************/
+    Public Sub view世帯List(sWhere As String, sTitle As String, Optional f As Boolean = False)
+        Dim sSQL As String
+        Dim sHead As String
+        
+        sSQL = "SELECT '農家.' & [D:世帯INFO].[ID] AS [Key], [D:個人INFO.氏名] AS [名称],[D:個人INFO].住民区分, 'House' AS Icon, 'House' AS SelectIcon, [D:個人INFO].[住所] AS 住所, [D:世帯INFO].農家番号,[D:個人Info].[フリガナ], M_BASICALL.名称 AS [専兼区分],[D:世帯INFO].確認日時, M_BASICALL.Class,IIF([住民区分]=" & Val(SystemDB.DBProperty("記録住民コード")) & ",0,-2147483631) AS ForeColor"
+        sHead = Replace(SysAD.GetSettingData("農地基本台帳", "世帯リスト", ADApp.Common.AppData("世帯リスト")), ",", ";")
+        
+        mvarPDW.SQLListview.SQLListviewCHead sSQL & " FROM ([D:世帯INFO] LEFT JOIN [D:個人INFO] ON [D:世帯INFO].世帯主ID = [D:個人INFO].ID) LEFT JOIN (SELECT * FROM [M_BASICALL] WHERE [Class]='専兼区分') AS [M_BASICALL]  ON [D:世帯INFO].兼業区分 = M_BASICALL.ID " & sWhere & " ORDER BY [D:個人Info].[フリガナ]", sHead, sTitle
+    End Sub
+
+    '/** 農地0001-0001-0002 ******** 農地リスト ******************Update 2008.03.24 ******/
+    Public Sub view農地List(sWhere As String, sTitle As String, Optional f As Boolean = False)
+        Dim sSQL As String
+        Dim sHeader As String
+        
+        If InStr(StrConv(sWhere, vbLowerCase), "where") = 0 Then sWhere = " WHERE " & sWhere
+        
+        sSQL = "SELECT '農地.' & [V_農地].[ID] AS [Key],V_農地.土地所在,'LAND' AS Icon,'LAND' AS SelectedIcon,[地番], V_地目.名称 AS 登記地目, V_現況地目.名称 AS 現況地目,V_農地.登記簿面積,V_農地.実面積,IIF([V_農地].[遊休化],'×','') AS 遊休化,IIF([V_農地].[無断転用],'×','') AS [無断転用], [D:個人Info].氏名 AS 管理者,IIf([V_農地].[自小作別]=2,'移譲年金',IIf([V_農地].[自小作別]=1,'小作','-')) AS 借受状態, IIf([V_農地].[自小作別]>0,[T_借受者].[氏名],'') AS 借受者,所有.氏名 AS [所有者], IIf([V_農地].[自小作別]>0,[V_農地].[小作開始年月日]) AS 貸借開始日, IIf([V_農地].[自小作別]>0,[V_農地].[小作終了年月日]) AS 貸借終了日,[小作料S], IIf([V_農地].[共有持分分母]>0 AND [V_農地].[共有持分分子]>0,[V_農地].[共有持分分子] & '/' & [V_農地].[共有持分分母]) AS [持分]" & _
+        ",[V_農地].[確認日時],[地目名],[田面積],[畑面積],[樹園地],$ADD$ FROM (((((V_農地 LEFT JOIN [D:個人Info] ON V_農地.管理人ID = [D:個人Info].ID) LEFT JOIN [D:個人Info] AS [T_借受者] ON V_農地.借受人ID = [T_借受者].ID) LEFT JOIN V_地目 ON V_農地.登記簿地目 = V_地目.ID) LEFT JOIN V_現況地目 ON V_農地.現況地目 = V_現況地目.ID) LEFT JOIN [V_農地状況] ON [V_農地].農地状況 = [V_農地状況].[ID]) LEFT JOIN [D:個人Info] AS 所有 ON V_農地.所有者ID = 所有.ID " & Trim(sWhere) & " ORDER BY [V_農地].大字ID, Val(IIf(IsNull([地番]),0,[地番])), Val(IIf(IsNull([地番]),0,IIf(InStr([地番],'-')>0,Mid$([地番],InStr([地番],'-')+1),0)));"
+        sHeader = Replace(SysAD.GetSettingData("農地基本台帳", "農地リスト", ADApp.Common.AppData("農地リスト")), ",", ";")
+        
+        If InStr(sHeader, "ソート文字") Then sSQL = Replace(sSQL, ",$ADD$", ",[ソート文字],$ADD$")
+        If InStr(sHeader, "農地状況") Then sSQL = Replace(sSQL, ",$ADD$", ",[V_農地状況].[名称] AS [農地状況],$ADD$")
+        If InStr(sHeader, "採草放牧面積") Then sSQL = Replace(sSQL, ",$ADD$", ",[採草放牧面積],$ADD$")
+        If InStr(sHeader, "貸付希望") Then sSQL = Replace(sSQL, ",$ADD$", ",IIF([貸付希望],'○','') AS [貸付希望],$ADD$")
+        If InStr(sHeader, "売渡希望") Then sSQL = Replace(sSQL, ",$ADD$", ",IIF([売渡希望],'○','') AS [売渡希望],$ADD$")
+        sSQL = Replace(sSQL, ",$ADD$", "")
+        
+        If f Then mvarPDW.SQLListview.SQLFindList sSQL, sHeader, sTitle Else mvarPDW.SQLListview.SQLListviewCHead sSQL, sHeader, sTitle
+    End Sub
+
+    '/** 世帯0001-0001-20091015-0001 ************ 世帯集計付リスト **************************
+    Public Sub view世帯集計List(ByVal sWhere As String, sTitle As String, Optional f As Boolean = False)
+        Dim sSQL As String
+        Dim sHeader As String
+        If Len(sWhere) Then sWhere = sWhere & " AND "
+        
+        sSQL = "SELECT '農家.' & [D:世帯Info].[ID] AS [KEY], [D:世帯Info].ID, [D:個人Info].氏名, V_行政区.ID, V_行政区.行政区, V_世帯別自作計.自作田, V_世帯別自作計.自作畑, V_世帯別自作計.自作樹, V_世帯別自作計.自作計, V_世帯別小作計.小作田, V_世帯別小作計.小作畑, V_世帯別小作計.小作樹, V_世帯別小作計.小作計, IIf(IsNull([自作田]),0,[自作田])+IIf(IsNull([小作田]),0,[小作田]) AS 経営田, IIf(IsNull([自作畑]),0,[自作畑])+IIf(IsNull([小作畑]),0,[小作畑]) AS 経営畑, IIf(IsNull([自作樹]),0,[自作樹])+IIf(IsNull([小作樹]),0,[小作樹]) AS 経営樹, IIf(IsNull([自作計]),0,[自作計])+IIf(IsNull([小作計]),0,[小作計]) AS 経営計, V_世帯別貸付計.貸付田, V_世帯別貸付計.貸付畑, V_世帯別貸付計.貸付樹, V_世帯別貸付計.貸付計 " & _
+        "FROM (((([D:個人Info] INNER JOIN [D:世帯Info] ON [D:個人Info].ID = [D:世帯Info].世帯主ID) LEFT JOIN V_行政区 ON [D:個人Info].行政区ID = V_行政区.ID) LEFT JOIN V_世帯別自作計 ON [D:世帯Info].ID = V_世帯別自作計.農家世帯ID) LEFT JOIN V_世帯別貸付計 ON [D:世帯Info].ID = V_世帯別貸付計.農家世帯ID) LEFT JOIN V_世帯別小作計 ON [D:世帯Info].ID = V_世帯別小作計.借受世帯ID " & _
+        "WHERE " & sWhere & "([農地との関連]=TRUE) ORDER BY [D:個人Info].行政区ID;"
+        sHeader = "氏名;氏名;行政区;行政区;@自作田;自作田;@自作畑;自作畑;@自作樹;自作樹;@自作計;自作計;@小作田;小作田;@小作畑;小作畑;@小作樹;小作樹;@小作計;小作計;@経営田;経営田;@経営畑;経営畑;@経営樹;経営樹;@経営計;経営計;@貸付田;貸付田;@貸付畑;貸付畑;@貸付樹;貸付樹;@貸付計;貸付計"
+        
+        If f Then mvarPDW.SQLListview.SQLFindList sSQL, sHeader, sTitle Else mvarPDW.SQLListview.SQLListviewCHead sSQL, sHeader, sTitle
+    End Sub
+    
+    Public Sub view選挙候補者List()
+        Dim sSQL As String
+        Dim sWhere As String
+        If Len(SystemDB.DBPropertyEx("選挙面積除外農地状況区分", vbString, "")) Then
+            sWhere = " WHERE [農地状況] NOT IN (" & SystemDB.DBPropertyEx("選挙面積除外農地状況区分", vbString, "") & ")"
+        Else
+            sWhere = ""
+        End If
+            
+        sSQL = "SELECT Sum(耕作農地.田畑計) AS 田畑計の合計, [D:世帯Info].ID, [D:個人Info].性別, '世帯員.' & [D:個人Info].ID AS [KEY], [D:世帯Info].農家番号, [D:個人Info].氏名, [V_続柄].続柄 AS 続柄1, [V_続柄_1].続柄 AS 続柄2, [V_続柄_2].続柄 AS 続柄3, [D:個人Info].生年月日, [D:個人Info].住民区分, M_BASICALL.名称 AS 住民区分名称, [D:個人Info].行政区ID, [D:個人Info].住所, [D:個人Info].選挙権の有無 ,[V_行政区].行政区 " & _
+        "FROM ((((SELECT IIf([自小作別]=0,IIF([管理世帯ID]<>0,[管理世帯ID],[所有世帯ID]),[借受世帯ID]) AS 耕作世帯, [D:農地Info].登記簿面積, [D:農地Info].実面積, IIF(IsNull([田面積]),0,[田面積])+IIF(IsNull([畑面積]),0,[畑面積])+IIF(IsNull([樹園地]),0,[樹園地]) AS 田畑計 FROM [D:農地Info]" & sWhere & ") AS 耕作農地 RIGHT JOIN [D:世帯Info] ON 耕作農地.耕作世帯 = [D:世帯Info].ID) INNER JOIN ((([D:個人Info] INNER JOIN [V_続柄] ON [D:個人Info].続柄1 = [V_続柄].ID) INNER JOIN [V_続柄] AS [V_続柄_1] ON [D:個人Info].続柄2 = [V_続柄_1].ID) INNER JOIN [V_続柄] AS [V_続柄_2] ON [D:個人Info].続柄3 = [V_続柄_2].ID) ON [D:世帯Info].ID = [D:個人Info].世帯ID) LEFT JOIN M_BASICALL ON [D:個人Info].住民区分 = M_BASICALL.ID) INNER JOIN [V_行政区] ON [D:個人Info].行政区ID = [V_行政区].ID " & _
+        "WHERE (((M_BASICALL.Class) = '住民区分')) Or (((M_BASICALL.Class) = '住民区分')) " & _
+        "GROUP BY [D:世帯Info].ID, [D:個人Info].性別, [D:世帯Info].農家番号, [D:個人Info].氏名, [V_続柄].続柄, [V_続柄_1].続柄, [V_続柄_2].続柄, [D:個人Info].生年月日, [D:個人Info].住民区分, M_BASICALL.名称, [D:個人Info].行政区ID, [D:個人Info].住所, [D:個人Info].選挙権の有無, [D:個人Info].ID, [V_続柄].ID, [D:個人Info].住民区分, [D:個人Info].行政区ID, V_行政区.行政区 " & _
+        "HAVING Sum(耕作農地.田畑計)>=1000 AND ((([D:世帯Info].ID)<>0) AND (([D:個人Info].生年月日)<#4/2/" & IIf(Month(Now) > 6, Year(Now) - 19, Year(Now) - 20) & "#) AND (([D:個人Info].住民区分)=" & SystemDB.DBProperty("記録住民コード") & ") AND (([D:個人Info].行政区ID)>0)) OR ((([D:個人Info].住民区分)=" & SystemDB.DBProperty("記録住民コード") & ") AND (([D:個人Info].選挙権の有無)=True)) " & _
+        "ORDER BY [D:個人Info].行政区ID, [D:世帯Info].ID, [V_続柄].ID, [D:個人Info].生年月日"
+    
+        mvarPDW.SQLListview.SQLListviewCHead sSQL, "行政区;行政区;世帯番号;ID;氏名;氏名;住所;住所;続柄1;続柄1;続柄2;続柄2;続柄3;続柄3;@経営面積;田畑計の合計", "選挙登載候補一覧"
+    End Sub
+
+    Private Function Fnc土地リスト(ByRef St As String) As String
+        St = Replace(Replace(Replace(St, "農地.", ""), "転用", ""), ";", ",")
+        If Right$(St, 1) = "," Then St = Left$(St, Len(St) - 1)
+        St = Replace(St, ",,", ",")
+        If St = "0," Then St = ""
+        If St = "0" Then St = ""
+        Fnc土地リスト = St
+    End Function
+
+    Private Sub Sub旧土地管出力(ByVal pID As Long, pMode As Long, n都道府県ID As Long, n支庁郡ID As Long, n市町村ID As Long, Optional b再作成 As Boolean = False, Optional bAuto As Boolean = False)
+    '旧_土地管出力-------------------------------------------------------------------------------------------------------------
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim RsS As ADBasicLIB2.RecordsetEx
+        Dim Rsx As ADBasicLIB2.RecordsetEx
+        Dim St As String
+        Dim SX As String
+        Dim s様式 As Long
+        Dim bNew As Boolean
+        Dim n As Long
+        
+        SystemDB.Parameters.Add "農家台帳.記録住民コード", Val(SystemDB.DBProperty("記録住民コード"))
+        
+        Set Rs = SystemDB.GetRecordsetEx("SELECT * FROM [D_申請] WHERE [ID]=" & pID, , , "土地管作成")
+        If Rs.EOF Then
+            SystemDB.CloseRs Rs
+            Exit Sub
+        ElseIf Rs.IsNull("申請総面積計") Then
+            St = Rs.NullCast("農地リスト", "")
+            St = Replace(Replace(Replace(St, "農地.", ""), "転用", ""), ";", ",")
+            If Right$(St, 1) = "," Then St = Left$(St, Len(St) - 1)
+            St = Replace(St, ",,", ",")
+            If St = "0," Then St = ""
+            If St = "0" Then St = ""
+            If Len(St) Then
+                Set Rsx = SystemDB.GetRecordsetEx("SELECT * FROM [U_全農地] WHERE [ID] IN (" & St & ");", 0, , "Sub")
+                Do Until Rsx.EOF
+                    If Rsx.Value("田面積") > 0 Then Rs.Value("申請総面積計") = Rs.Value("申請総面積計") + Rsx.Value("田面積")
+                    If Rsx.Value("畑面積") > 0 Then Rs.Value("申請総面積計") = Rs.Value("申請総面積計") + Rsx.Value("畑面積")
+                    Rsx.MoveNext
+                Loop
+                Rsx.CloseRs
+                Rs.Update
+            End If
+        End If
+        If Rs.IsNull("借入面積B") Then
+            Set Rsx = SystemDB.GetRecordsetEx("SELECT [田面積]+[畑面積] AS 面積 FROM [D:農地Info] WHERE ((([D:農地Info].借受人ID)=" & Rs.Value("申請者B") & ") AND (([D:農地Info].自小作別)>0)) GROUP BY [田面積]+[畑面積];", 0, , "X")
+            If Rsx.EOF Then
+                Rs.Update "借入面積B", 0
+            Else
+                Rs.Update "借入面積B", Rsx.NullCast("面積", 0)
+            End If
+            Rsx.CloseRs
+        End If
+        
+                
+        If Rs.IsNull("小作料") Then
+        ElseIf Val(Rs.Value("小作料")) <> Rs.Value("小作料") Then
+            St = Rs.NullCast("小作料", "")
+            SX = Rs.NullCast("小作料単位", "")
+            If Left$(St, 2) = "反当" And SX = "円" Then
+                St = Val(StrConv(MID$(St, 3), vbNarrow))
+            ElseIf Left$(St, 2) = "反当" And SX = "俵" Then
+                Rs.Update "小作料", Val(StrConv(MID$(St, 3), vbNarrow))
+                Rs.Update "小作料単位", "俵/10a"
+            ElseIf InStr(St, ",") Then
+                Rs.Update "小作料", Replace(St, ",", "")
+            ElseIf Right$(St, 1) = "万" And SX = "円" Then
+                Rs.Update "小作料", Val(StrConv(Left$(St, Len(St) - 1), vbNarrow))
+                Rs.Update "小作料単位", "万円"
+            ElseIf Trim(St) = "無償" Then
+                Rs.Update "小作料", Null
+                Rs.Update "小作料単位", "無償"
+            Else
+            End If
+        End If
+        
+        Set RsS = SystemDB.GetRecordsetEx("SELECT * FROM [D_土地管理] WHERE [ID]=" & pID, , , "土地管作成2")
+        If RsS.EOF Then
+            RsS.AddNew
+        End If
+            
+            Select Case pMode
+                Case 0:
+                    RsS.Value("ID") = pID
+                    RsS.Value("調査年") = Rs.Year("許可年月日")
+                    If n都道府県ID = 0 Then RsS.Value("都道府県ID") = Val(SystemDB.DBProperty("都道府県ID")) Else RsS.Value("都道府県ID") = n都道府県ID
+                    If n支庁郡ID = 0 Then RsS.Value("支庁郡ID") = Val(SystemDB.DBProperty("支庁郡ID")) Else RsS.Value("支庁郡ID") = n支庁郡ID
+                    If n市町村ID = 0 Then St = SystemDB.DBProperty("市町村ID") Else St = n市町村ID
+                    If Len(St) >= 3 Then
+                        RsS.Value("市町村ID") = Right(St, 3)
+                    End If
+                    
+                    RsS.Value("農業地域類型区分") = SystemDB.DBProperty("農業地域類計区分")
+                    
+                    Select Case Rs.Value("法令")
+                        Case state3条所有権
+                            RsS.Value("適用法令") = 1
+                            RsS.Value("様式") = 1
+                            s様式 = 1
+                            RsS.Value("権利の種類") = IIf(Val(Rs.Value("小作料")) > 0, 1, 2)
+                            n = Val(Replace(Rs.V("小作料"), ",", ""))
+                            If n > 0 Then
+                                If InStr("円万円千円", Rs.V("小作料単位")) Then
+                                    If Rs.V("小作料単位") = "万円" Then n = n * 10000
+                                    If Rs.V("小作料単位") = "千円" Then n = n * 1000
+                                    If Rs.Value("申請総面積計") Then
+                                    Select Case Int(n / Rs.Value("申請総面積計") * 1000)
+                                        Case Is < 30: RsS.V("地価") = 1
+                                        Case 30 To 50: RsS.V("地価") = 2
+                                        Case 50 To 70: RsS.V("地価") = 3
+                                        Case 70 To 100: RsS.V("地価") = 4
+                                        Case 100 To 150: RsS.V("地価") = 5
+                                        Case Is > 150: RsS.V("地価") = 6
+                                    End Select
+                                    End If
+                                End If
+                            End If
+                            RsS.Value("市町村外居住者の取得") = 3
+                        Case state3条賃借権
+                            RsS.Value("適用法令") = 1
+                            RsS.Value("様式") = 1
+                            s様式 = 1
+                            RsS.Value("権利の種類") = IIf(Rs.Value("権利種類") = 1, 4, 7)
+                            RsS.Value("市町村外居住者の取得") = 3
+                        Case state県3条所有権
+                            RsS.Value("適用法令") = 3
+                            RsS.Value("様式") = 1
+                            s様式 = 1
+                            RsS.Value("権利の種類") = IIf(Val(Rs.Value("小作料")) > 0, 1, 2)
+                            If RsS.Value("権利の種類") = 2 Then RsS.Value("小作料") = 0
+                            RsS.Value("市町村外居住者の取得") = 1
+                        Case state県3条賃借権
+                            RsS.Value("適用法令") = 3
+                            RsS.Value("様式") = 1
+                            s様式 = 1
+                            RsS.Value("権利の種類") = IIf(Rs.Value("権利種類") = 1, 4, 7)
+                            RsS.Value("市町村外居住者の取得") = 1
+                        Case state基盤所有権設定
+                            RsS.Value("適用法令") = 4
+                            RsS.Value("様式") = 1
+                            s様式 = 1
+                            RsS.Value("権利の種類") = IIf(Val(Rs.Value("小作料")) > 0, 1, 2)
+                        Case state基盤利用権設定
+                            RsS.Value("適用法令") = 4
+                            RsS.Value("様式") = 1
+                            s様式 = 1
+                            RsS.Value("権利の種類") = IIf(Rs.Value("権利種類") = 1, 4, 7)
+                            RsS.Value("市町村外居住者の取得") = 3
+                        Case state基盤利用権移転
+                            RsS.Value("適用法令") = 4
+                            RsS.Value("様式") = 1
+                            s様式 = 1
+                            RsS.Value("権利の種類") = IIf(Rs.Value("権利種類") = 1, 6, 9)
+                        Case state4条転用
+                            RsS.Value("適用法令") = 5
+                            RsS.Value("様式") = 3
+                            s様式 = 3
+                            RsS.Value("権利の種類") = 17
+                            RsS.Value("許可除外条項") = 1
+                        Case state5条所有権
+                            RsS.Value("適用法令") = 8
+                            RsS.Value("様式") = 3
+                            s様式 = 3
+                            RsS.Value("権利の種類") = IIf(Val(Rs.Value("小作料")) > 0, 13, 14)
+                            RsS.Value("許可除外条項") = 1
+                        Case state5条賃借権
+                            RsS.Value("適用法令") = 8
+                            RsS.Value("様式") = 3
+                            s様式 = 3
+                            RsS.Value("権利の種類") = IIf(Rs.Value("権利種類") = 1, 15, 16)
+                            RsS.Value("許可除外条項") = 1
+                        Case state20条解約
+                            RsS.Value("適用法令") = 14
+                            RsS.Value("様式") = 2
+                            s様式 = 2
+                            RsS.Value("権利の種類") = 18
+                        Case state合意解約
+                            RsS.Value("適用法令") = 15
+                            RsS.Value("様式") = 2
+                            s様式 = 2
+                            RsS.Value("権利の種類") = IIf(Rs.Value("権利種類") = 1, 19, 20)
+                        Case state非農地証明
+                            RsS.Value("適用法令") = 12
+                            RsS.Value("様式") = 3
+                            s様式 = 3
+                            RsS.Value("権利の種類") = 17
+                            RsS.Value("許可除外条項") = 21
+                        Case 990, 991
+                        Case "302", "303", "500", "400"
+                        Case Else
+                            Debug.Assert CaseAssertPrint(Rs.Value("法令"))
+                    End Select
+                    
+                    RsS.Value("許可受理公告年月日") = Rs.NullCast("許可年月日", "")
+                    RsS.Value("譲渡人") = Rs.Value("氏名A")
+                    RsS.Value("譲受人") = Rs.Value("氏名B")
+                    St = Trim(Replace(Replace(Rs.NullCast("農地リスト", ""), "転用農地.", ""), ";", ","))
+                    St = Trim(Replace(Replace(St, "農地.", ""), ";", ","))
+                    If Left$(St, 1) = ";" Then St = MID$(St, 2)
+                    If Right$(St, 1) = ";" Then St = Left$(St, Len(St) - 1)
+                    RsS.Value("関連農地Lst") = Trim(St)
+                    Select Case Rs.Value("経営面積A")
+                        Case 0: RsS.Value("渡人経営農地面積") = 1
+                        Case Is < 3000: RsS.Value("渡人経営農地面積") = 2
+                        Case Is < 5000: RsS.Value("渡人経営農地面積") = 3
+                        Case Is < 7000: RsS.Value("渡人経営農地面積") = 4
+                        Case Is < 10000: RsS.Value("渡人経営農地面積") = 5
+                        Case Is < 15000: RsS.Value("渡人経営農地面積") = 6
+                        Case Is < 20000: RsS.Value("渡人経営農地面積") = 7
+                        Case Is < 25000: RsS.Value("渡人経営農地面積") = 8
+                        Case Is < 30000: RsS.Value("渡人経営農地面積") = 9
+                        Case Is < 50000: RsS.Value("渡人経営農地面積") = 10
+                        Case Is < 75000: RsS.Value("渡人経営農地面積") = 11
+                        Case Is < 10000: RsS.Value("渡人経営農地面積") = 12
+                        Case Is < 15000: RsS.Value("渡人経営農地面積") = 13
+                        Case Is >= 15000: RsS.Value("渡人経営農地面積") = 14
+                        Case Else: RsS.Value("渡人経営農地面積") = 1
+                    End Select
+                    
+                    Select Case Rs.Value("経営面積B")
+                        Case 0: RsS.Value("受人経営農地面積") = 1
+                        Case Is < 3000: RsS.Value("受人経営農地面積") = 2
+                        Case Is < 5000: RsS.Value("受人経営農地面積") = 3
+                        Case Is < 7000: RsS.Value("受人経営農地面積") = 4
+                        Case Is < 10000: RsS.Value("受人経営農地面積") = 5
+                        Case Is < 15000: RsS.Value("受人経営農地面積") = 6
+                        Case Is < 20000: RsS.Value("受人経営農地面積") = 7
+                        Case Is < 25000: RsS.Value("受人経営農地面積") = 8
+                        Case Is < 30000: RsS.Value("受人経営農地面積") = 9
+                        Case Is < 50000: RsS.Value("受人経営農地面積") = 10
+                        Case Is < 75000: RsS.Value("受人経営農地面積") = 11
+                        Case Is < 10000: RsS.Value("受人経営農地面積") = 12
+                        Case Is < 15000: RsS.Value("受人経営農地面積") = 13
+                        Case Is >= 15000: RsS.Value("受人経営農地面積") = 14
+                        Case Else: RsS.Value("受人経営農地面積") = 1
+                    End Select
+                    
+                    Select Case s様式
+                        Case 1:
+                            If Rs.Value("法令") = state3条賃借権 Or Rs.Value("法令") = state県3条賃借権 Or Rs.Value("法令") = state基盤利用権設定 Or Rs.Value("法令") = state基盤利用権移転 Then
+                                RsS.Value("始期") = Format(Rs.Value("始期"), "YYYYMM")
+                                RsS.Value("終期") = Format(Rs.Value("終期"), "YYYYMM")
+                                Select Case Year(Rs.Value("終期")) - Year(Rs.Value("始期"))
+                                    Case Is < 1: RsS.Value("期間") = 1
+                                    Case Is < 3: RsS.Value("期間") = 2
+                                    Case Is < 6: RsS.Value("期間") = 3
+                                    Case Is < 10: RsS.Value("期間") = 4
+                                    Case Is >= 10: RsS.Value("期間") = 5
+                                    Case Else: RsS.Value("期間") = 0
+                                End Select
+                            Else
+                                RsS.Value("始期") = Null
+                                RsS.Value("終期") = Null
+                                RsS.Value("期間") = Null
+                            End If
+                            
+                            Select Case Rs.Value("借入面積B")
+                                Case 0: RsS.Value("受人借入農地面積") = 1
+                                Case Is < 1000: RsS.Value("受人借入農地面積") = 2
+                                Case Is < 3000: RsS.Value("受人借入農地面積") = 3
+                                Case Is < 5000: RsS.Value("受人借入農地面積") = 4
+                                Case Is < 7000: RsS.Value("受人借入農地面積") = 5
+                                Case Is < 10000: RsS.Value("受人借入農地面積") = 6
+                                Case Is < 20000: RsS.Value("受人借入農地面積") = 7
+                                Case Is < 30000: RsS.Value("受人借入農地面積") = 8
+                                Case Is < 50000: RsS.Value("受人借入農地面積") = 9
+                                Case Is >= 50000: RsS.Value("受人借入農地面積") = 10
+                                Case Else: RsS.Value("受人借入農地面積") = 1
+                            End Select
+                            
+                             Select Case Rs.Value("年齢A")
+                                Case Is < 40: RsS.Value("渡人年齢") = 1
+                                Case Is <= 49: RsS.Value("渡人年齢") = 2
+                                Case Is <= 59: RsS.Value("渡人年齢") = 3
+                                Case Is <= 64: RsS.Value("渡人年齢") = 4
+                                Case Is <= 69: RsS.Value("渡人年齢") = 5
+                                Case Is <= 74: RsS.Value("渡人年齢") = 6
+                                Case Is >= 75: RsS.Value("渡人年齢") = 7
+                                Case Else: RsS.Value("渡人年齢") = 0
+                            End Select
+                        Case 2:
+                            RsS.Value("設定時期") = 3
+                            RsS.Value("根拠条項") = 6
+                            RsS.Value("申請形態") = 1
+                            RsS.Value("許可除外条項") = 1
+                            'Rss.Value("解約等の事由") = 13
+                        Case 3:
+                            RsS.V("一時転用の該当") = 2
+                            RsS.V("土地改良事業実施") = 2
+                            RsS.Value("農地区分") = 31
+                    End Select
+                Case 1:
+            
+            End Select
+            Select Case Rs.Value("法令")
+                Case state3条所有権, state県3条所有権
+                    RsS.Value("通作距離") = 1 - (state県3条所有権 = Rs.Value("法令")) * 2
+                    Set旧個人法人の別 RsS, Rs
+                    
+                    RsS.Value("下限面積該当") = 5
+                    If RsS.Value("権利の種類") = 2 Then
+                        RsS.Value("小作料") = 0
+                        様式1事由設定 Rs.NullCast("申請理由A", ""), RsS, 0, Rs.Value("法令")
+                    Else
+                        Select Case Trim(Rs.NullCast("小作料単位", ""))
+                            Case "", "対価土地"
+                            Case "円": Set対価 Rs, RsS, 1
+                            Case "万円": Set対価 Rs, RsS, 10000
+                            Case Else
+'                                Debug.Assert False
+                        End Select
+                        様式1事由設定 Rs.NullCast("申請理由A", ""), RsS, 1, Rs.Value("法令")
+                    End If
+                Case state3条賃借権, state県3条賃借権
+                    RsS.Value("下限面積該当") = 5
+                    RsS.Value("通作距離") = 1 - (state県3条賃借権 = Rs.Value("法令")) * 2
+                    Set旧個人法人の別 RsS, Rs
+                    If RsS.Value("権利の種類") = 7 Or RsS.Value("権利の種類") = 8 Or RsS.Value("権利の種類") = 9 Then
+                        RsS.Value("小作料") = 0
+                        様式1事由設定 Rs.NullCast("申請理由A", ""), RsS, 2, Rs.Value("法令")
+                    Else
+                        Select Case Rs.Value("小作料単位")
+                            Case "", "俵", "俵(モミ)", "俵/10a":
+                                RsS.Value("小作料") = 0
+                            Case "千円":
+                                RsS.Value("小作料") = (Rs.NullCast("小作料", 0) * 1000) / Rs.NullCast("申請総面積計", 1) * 10
+                            Case "円":
+                                RsS.Value("小作料") = Rs.NullCast("小作料", 0) / Rs.NullCast("申請総面積計", 1) * 10
+                            Case "俵/反", "俵/反（餅米）"
+                                RsS.Value("小作料") = 0
+                            Case Else
+                                'Debug.Assert CaseAssertPrint(Rs.Value("小作料単位"))
+                        End Select
+                        様式1事由設定 Rs.Value("申請理由A"), RsS, 2, Rs.Value("法令")
+                    End If
+                Case state4条転用, state5条所有権, state5条賃借権, state非農地証明:
+                    RsS.Value("土地利用計画の区域区分") = 5
+                    RsS.Value("転用に伴う農用地区域除外") = 2
+                    If Rs.Value("法令") = state4条転用 Then
+                        RsS.Value("転用主体") = 9
+                    ElseIf Not Rs.IsNull("申請理由A") Then
+                        Select Case True
+                            Case InStr(Rs.Value("申請理由A"), "農家") > 0: RsS.Value("用途") = "01": RsS.Value("転用主体") = 9
+                            Case InStr(Rs.Value("申請理由A"), "一般") > 0: RsS.Value("用途") = "02": RsS.Value("転用主体") = 10
+                            Case InStr(Rs.Value("申請理由A"), "資材") > 0: RsS.Value("用途") = "42"
+                            Case InStr(Rs.Value("申請理由A"), "牛舎") > 0: RsS.Value("用途") = "41": RsS.Value("転用主体") = 9
+                            Case InStr(Rs.Value("申請理由A"), "堆肥") > 0: RsS.Value("用途") = "41": RsS.Value("転用主体") = 9
+                            Case InStr(Rs.Value("申請理由A"), "進入路") > 0: RsS.Value("用途") = "52"
+                            Case Else
+                                RsS.Value("用途") = fnc土地管用変換テーブル作成("土地管理理由⇔用途変換", Rs.V("申請理由A"), bAuto)
+                        End Select
+                        If IsNull(RsS.Value("用途")) Then RsS.V("用途") = 52
+                        Select Case RsS.Value("用途")
+                            Case 1: RsS.Value("転用主体") = 9
+                            Case 2: RsS.Value("転用主体") = 10
+                            Case 3: RsS.Value("転用主体") = 8
+                            Case 11 To 14: RsS.Value("転用主体") = 3
+                            Case 21 To 44: RsS.Value("転用主体") = 8
+                            Case 51: RsS.Value("転用主体") = 9
+                            Case Else
+                                RsS.Value("転用主体") = "08"
+                        End Select
+                    Else
+                        If RsS.IsNull("転用主体") Then RsS.Value("転用主体") = "10" Else RsS.Value("転用主体") = "08"
+                        
+                    End If
+                Case state基盤所有権設定
+                    RsS.Value("下限面積該当") = 5
+                    RsS.Value("通作距離") = 1 - (state県3条賃借権 = Rs.Value("法令")) * 2
+                    Set旧個人法人の別 RsS, Rs
+                    If RsS.Value("権利の種類") = 7 Or RsS.Value("権利の種類") = 8 Or RsS.Value("権利の種類") = 9 Then
+                        RsS.Value("小作料") = 0
+                        様式1事由設定 Rs.NullCast("申請理由A", ""), RsS, 2, Rs.Value("法令")
+                    Else
+                        Select Case Rs.Value("小作料単位")
+                            Case "", "俵", "俵(モミ)", "俵/10a":
+                                RsS.Value("小作料") = 0
+                            Case "千円":
+                                RsS.Value("小作料") = (Rs.NullCast("小作料", 0) * 1000) / Rs.NullCast("申請総面積計", 1) * 10
+                            Case "円":
+                                RsS.Value("小作料") = Rs.NullCast("小作料", 0) / Rs.NullCast("申請総面積計", 1) * 10
+                            Case "俵/反", "俵/反（餅米）"
+                                RsS.Value("小作料") = 0
+                            Case Else
+                                'Debug.Assert CaseAssertPrint(Rs.Value("小作料単位"))
+                        End Select
+                        様式1事由設定 Rs.NullCast("申請理由A", ""), RsS, 2, Rs.Value("法令")
+                    End If
+                Case state基盤利用権設定, state基盤利用権移転
+                    RsS.Value("通作距離") = 1
+                    Set旧個人法人の別 RsS, Rs
+                    RsS.Value("下限面積該当") = 5
+                    様式1事由設定 Rs.NullCast("申請理由A", ""), RsS, 2, Rs.Value("法令")
+                    
+                    If Rs.NullCast("小作料", 0) = 0 Then
+                        RsS.Value("小作料") = 0
+                    Else
+                        Select Case Rs.Value("小作料単位")
+                            Case "":
+                            Case "円":
+                                RsS.Value("小作料") = Val(Rs.NullCast("小作料", 0)) / Rs.NullCast("申請総面積計", 1) * 10
+                            Case "円/10a", "10a":
+                            Case "俵(モミ)", "俵", "米"
+                            Case Else
+                                'Debug.Assert False
+                        End Select
+                    End If
+                Case state20条解約, state合意解約
+                    Set旧個人法人の別 RsS, Rs
+                Case state非農地証明
+                    Stop
+                Case 990, 991, 302, 302, 303, 400, 500
+                Case Else
+                    Debug.Assert CaseAssertPrint(Rs.Value("法令"))
+            End Select
+        RsS.Update
+        SystemDB.CloseRs RsS
+        SystemDB.CloseRs Rs
+    '-------------------------------------------------------------------------------------------------------------旧_土地管出力
+    End Sub
+
+End Module
+
+
+
+
+
+
+
+
+
+
+Module  mod農家台帳SUb
+    Option Explicit
+    Public Sub sub地図(ByVal sWhere As String)
+        Dim St As String
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        St = "SELECT [V_農地].[ID] FROM V_農地 WHERE " & sWhere & " UNION " & "SELECT [V_転用農地].[ID] FROM V_転用農地 WHERE " & sWhere
+        Set Rs = SystemDB.GetRecordsetEx(St, 0, , "Sub")
+        St = Rs.GetString("", ",")
+        SysAD.SendMessTo地図 St
+    End Sub
+    Public Sub sub地図転用(ByVal sWhere As String)
+        Dim St As String
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        St = "SELECT [V_転用農地].[ID] FROM V_転用農地 WHERE " & sWhere
+        Set Rs = SystemDB.GetRecordsetEx(St, 0, , "")
+        St = Rs.GetString("", ",")
+        SysAD.SendMessTo地図 St
+    End Sub
+
+ 
+
+    Public Sub Sub検索フリガナ作成()
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        With SystemDB
+            Set Rs = .GetRecordsetEx("SELECT Trim([フリガナ]) AS 式1, [D:個人Info].検索フリガナ FROM [D:個人Info] WHERE [D:個人Info].検索フリガナ Is Null And (((Trim([フリガナ])) Is Not Null));", , , "Sub検索フリガナ作成")
+            Do Until Rs.EOF
+                Rs.Update "検索フリガナ", Fnc.あいまいカナ文字列(Rs.V("式1"))
+                Rs.MoveNext
+            Loop
+            Rs.CloseRs
+            .ExecuteSQL "UPDATE [D:農地Info] SET [D:農地Info].農地状況 = 0 WHERE [農地状況] Is Null;"
+        End With
+    End Sub
+
+    Public Function fnc関連者一覧(ByVal sParam As String) As String
+        Dim Ar As Variant
+        Dim i As Integer
+        Dim keyHead As String
+        Dim Rs As ADBasicLIB2.RecordsetEx
+        Dim sKey As String
+        Dim SX As String
+        Dim sSQL As String
+        
+        Ar = Split(sParam, ";")
+        keyHead = ""
+        
+        For i = 0 To UBound(Ar)
+            If Len(Ar(i)) = 0 Then
+            
+            ElseIf Len(keyHead) = 0 Then
+                keyHead = Fnc.GetKeyHead(Ar(i))
+            ElseIf keyHead <> Fnc.GetKeyHead(Ar(i)) Then
+                fnc関連者一覧 = "複数のクラスの関連者一覧には対応していません"
+                Exit Function
+            End If
+        Next
+        
+        SX = ""
+        Select Case keyHead
+            Case "農地":
+                sKey = Replace(Replace(sParam, "農地.", ""), ";", ",")
+                Set Rs = SystemDB.GetRecordsetEx("SELECT [所有者ID],[借受人ID] FROM [D:農地Info] WHERE [ID] In (" & sKey & ")", 0, , "なし")
+                            
+                SX = Rs.GetString(";", ";")
+                Rs.CloseRs
+            Case "申請":
+                sKey = Replace(Replace(sParam, "申請.", ""), ";", ",")
+                
+                Set Rs = SystemDB.GetRecordsetEx("SELECT [申請者A],[申請者B] FROM [D_申請] WHERE [ID] In (" & sKey & ")", 0, , "なし")
+                SX = Rs.GetString(";", ";")
+                
+                Rs.CloseRs
+            Case Else
+                fnc関連者一覧 = "[" & keyHead & "]オブジェクトの関連者一覧には対応していません"
+        End Select
+        
+        If Len(SX) Then
+            SX = MID$(Replace(Replace(";" & SX & ";", ";0;", ";"), ";;", ";"), 2)
+            SX = Left$(SX, Len(SX) - 1)
+            SX = Replace(SX, ";", ",")
+            sSQL = "SELECT '世帯員.' & [D:個人Info].[ID] AS [Key], [D:個人Info].氏名, [D:個人Info].フリガナ, [D:個人Info].郵便番号 AS 郵便番号, [D:個人Info].住所 " & _
+            "From [D:個人Info] WHERE [ID] In (" & SX & ")"
+            mvarPDW.SQLListview.SQLListviewCHead sSQL, "氏名;氏名;郵便番号;郵便番号;住所;住所", "関連者住所一覧【宛名ラベル】"
+            fnc関連者一覧 = ""
+        End If
+        
+    End Function
+
+End Module

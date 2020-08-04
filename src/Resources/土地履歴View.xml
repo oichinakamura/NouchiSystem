@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DataViewNext Name="土地履歴">
+  <GroupBoxPlus Name="管理情報">
+    <TextBoxPlus FieldName="ID" ReadOnly="IsReadOnly" WithLabel="ID" />
+  </GroupBoxPlus>
+</DataViewNext>

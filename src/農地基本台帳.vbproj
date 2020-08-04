@@ -1,0 +1,932 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{51E5959C-4B31-40DB-A00F-D1092B438C0C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>農地基本台帳.My.MyApplication</StartupObject>
+    <RootNamespace>農地基本台帳</RootNamespace>
+    <AssemblyName>農地基本台帳</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>U:\各自治体\伊佐市\システム発行\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>\\172.29.11.1\システム配置\農地台帳\伊佐市\</InstallUrl>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <TrustUrlParameters>true</TrustUrlParameters>
+    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationVersion>1.20.7.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <ExcludeDeploymentUrl>true</ExcludeDeploymentUrl>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <BootstrapperComponentsLocation>Relative</BootstrapperComponentsLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>農地基本台帳.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>農地基本台帳.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>D9D7D0D1A2F57D778899F66C2EA0297BF5B649FA</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>農地基本台帳_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>農地基本台帳_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\農家個人.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CitiesCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=dd8a24713967b419, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\CitiesCode.dll</HintPath>
+    </Reference>
+    <Reference Include="CustomControlLIB, Version=1.0.0.0, Culture=neutral, PublicKeyToken=043acb71dc3875d4, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\CustomControlLIB.dll</HintPath>
+    </Reference>
+    <Reference Include="HIMTools, Version=1.0.0.0, Culture=neutral, PublicKeyToken=06b0441b13033729, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\HIMTools.dll</HintPath>
+    </Reference>
+    <Reference Include="HimTools2012, Version=1.0.0.0, Culture=neutral, PublicKeyToken=122ce38c05ff2ae2, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\HimTools2012.dll</HintPath>
+    </Reference>
+    <Reference Include="HimTools2017, Version=1.0.0.0, Culture=neutral, PublicKeyToken=122ce38c05ff2ae2, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\HimTools2017.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualBasic.Compatibility" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="Class\PropertyGridForDataRow.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\CadastralMaps.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\CCreateClass.vb" />
+    <Compile Include="Class\システム\CDataViewPanel農地台帳.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\CInputDate.vb" />
+    <Compile Include="Class\システム\CInterfaceSetting.vb" />
+    <Compile Include="Class\システム\CListColumnDesign.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\CommonMASTER管理.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\CSystemInfon農地台帳.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\CTabPageClassGenerator.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\CTargetObjWithView農地台帳.vb" />
+    <Compile Include="Class\システム\CViewToExcel.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\DataViewNext農地台帳.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\SynchronizeTwinGridView.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\TableCheckAndUpdate.vb" />
+    <Compile Include="Class\市町村別\CTabPage受付公布簿.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\市町村別\C曽於市.vb" />
+    <Compile Include="Class\市町村別\C架空市.vb" />
+    <Compile Include="Class\農地基本台帳\C申請入力支援.vb" />
+    <Compile Include="Class\市町村別\Cいちき串木野市.vb" />
+    <Compile Include="Class\市町村別\C伊佐市.vb" />
+    <Compile Include="Class\農地基本台帳\データ管理\CTBL固定情報.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\データ管理\C繰返クエリ.vb" />
+    <Compile Include="Class\農地基本台帳\データ管理\TBL農地\CTBL農地共通.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\印刷補助\C印刷Accessor.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\報告書\CPrint工事進捗状況報告書.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\実績報告書\CDataToExcel.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成農地改良届.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成農振地整備計画変更.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成非農地証明.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\証明書\CPrint耕作多筆証明願.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\CTabPage現地調査表作成.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成18条解約.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\各種\CObj各種マスタ.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\各種\CObj各種削除.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\各種\CObj各種集計.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\CObj土地履歴.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\各種\C各種申請管理.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface3条の3第1項農地取得.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface3条耕作権設定.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterfaceあっせん申出受.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterfaceあっせん申出渡.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface事業計画変更.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface利用権移転.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface利用権設定.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface基盤法所有権設定.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface農地利用目的変更.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface農地改良届.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface農地法4条.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface農地法5条所有権.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\C申請追加.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface農地法5条賃借権.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface農振地整備計画変更.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface非農地証明願.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\C申請農地一覧TBL.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\DataViewNext申請.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\DataViewNext申請買受適格.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\農地\CInput農地.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\農地\DataViewNext農地.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\農家\DataViewNext農家.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\BackGround処理\CPanel公共機関農地削除.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\CTabPageF2利用状況意向調査.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\農地情報公開\CF1データ出力.vb" />
+    <Compile Include="Class\農地基本台帳\各種ページ\農地情報公開\CF2データ出力.vb" />
+    <Compile Include="Class\農地基本台帳\各種ページ\COutPutCSV.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\COutPutCSV農地一覧.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\CPage利用意向調査H26.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\CTabPage利用意向調査実施農地状況一覧.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\C全農地CSV出力.vb" />
+    <Compile Include="Class\農地基本台帳\各種ページ\COutPutCSV農地利用状況調査.vb" />
+    <Compile Include="Class\農地基本台帳\各種ページ\CTabPage3条所有権売買価格一覧表出力.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\CTabPage事務処理状況出力.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\CTabPage各種グリッド設定.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\CPage重複農地検索.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\CTabPage工事進歩状況一覧表.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\農地情報公開\CTabPage標準フォーマット出力.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\農地情報公開\C各フェーズCSV出力.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\C権利移動借賃データ出力.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\C農地異動申請別一覧.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\データ取込\CTabPageCSVTo農地.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\異動処理\CTabPage分割処理.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\異動処理\CTabPage分筆処理.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\貸借関連データ\CTabPage農業委員毎利用権実績.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\農地情報公開\C標準フォーマット.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\集計関連\CPage共通一覧集計.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\異動処理\CTabPage申請10a当金額変換.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\市町村別\固定資産比較\C固定資産比較.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\市町村別\C長島町.vb" />
+    <Compile Include="Class\市町村別\C阿久根市.vb" />
+    <Compile Include="Class\農地基本台帳\データ管理\CTBL世帯営農.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\CPrint受付許可名簿作成.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\CPrint農地台帳.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\CPrint農地法第3_3_1.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成あっせん.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成合意解約.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成転用事業計画変更.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成農地利用変更.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成農地法3条.vb" />
+    <Compile Include="Class\市町村別\C三股町.vb" />
+    <Compile Include="Class\市町村別\C大崎町.vb" />
+    <Compile Include="Class\市町村別\C宗像市.vb" />
+    <Compile Include="Class\農地基本台帳\データ管理\CTBL土地履歴.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成農地法4条.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成農地法5条.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成農用地利用集積計画所有権.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成農用地利用集積計画移転.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成農用地利用集積計画貸借.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint諮問資料.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\CObj営農情報.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\CObj固定土地.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\CObj転用農地.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\各種\C転用許可済み.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface18条解約.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface3条所有権設定.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\インターフェイス\CInterface合意解約.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\異動処理\CTabPage自然解約実行.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\異動処理\CTabPage農地10a当金額変換.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\異動処理\CTabPage重複農地.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\異動処理\CTabPage換地処理.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\classpage転用非農地整合性確認.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\CManualPage.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\Cpage耕作放棄地取込.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\CPage農地台帳一括印刷.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\異動処理\classPage分筆異動.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\貸借関連データ\C農地賃借料データ.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\農家検索\CTaskList.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\集計関連\CTabPage総括表.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\集計関連\CH26各種集計.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\集計関連\C相続未登記地区別調査.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\集計関連\C相続未登記実態調査.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\集計関連\C相続未登記等農地調査.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\集計関連\C農家別自小作法令別集計.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\非農地\CTabPage非農地通知伊佐.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\非農地\CTabPage非農地通知長島.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\非農地\姶良仕様\classPage非農地通知済証明願.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\非農地\CTabPage非農地通知.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\農家リストクラス\CNList農地台帳.vb" />
+    <Compile Include="Class\農地基本台帳\農家リストクラス\C土地履歴リスト.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\農家リストクラス\検索条件\Common検索条件.vb" />
+    <Compile Include="Form\dlgInputBWDate.Designer.vb">
+      <DependentUpon>dlgInputBWDate.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlgInputBWDate.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\dlgInputDate.Designer.vb">
+      <DependentUpon>dlgInputDate.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlgInputDate.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\dlgInputForm.Designer.vb">
+      <DependentUpon>dlgInputForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlgInputForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\dlgSelectDataGridView.Designer.vb">
+      <DependentUpon>dlgSelectDataGridView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlgSelectDataGridView.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\dlgTest.Designer.vb">
+      <DependentUpon>dlgTest.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlgTest.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\dlg複数地番検索.Designer.vb">
+      <DependentUpon>dlg複数地番検索.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlg複数地番検索.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\農家検索\CFolderTree.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\ObjectMan.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\総会資料作成\CPrint総会資料作成.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\証明書\CPrint耕作証明書.vb" />
+    <Compile Include="Class\システム\CMapConnection.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\各種\CObj各種.vb" />
+    <Compile Include="Class\農地基本台帳\C農地基本台帳.vb" />
+    <Compile Include="Class\市町村別\C南種子町.vb" />
+    <Compile Include="Class\市町村別\C日置市.vb" />
+    <Compile Include="Class\市町村別\C枕崎市.vb" />
+    <Compile Include="Class\農地基本台帳\各種ページ\classpage申請処理.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\データ管理\TBL農地\CTBL農地.vb" />
+    <Compile Include="Class\農地基本台帳\各種ページ\C利用権終期管理.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\データ管理\CTBL世帯.vb" />
+    <Compile Include="Class\農地基本台帳\データ管理\CTBL住記.vb" />
+    <Compile Include="Class\農地基本台帳\データ管理\CTBL個人.vb" />
+    <Compile Include="Class\農地基本台帳\データ管理\CTBL申請.vb" />
+    <Compile Include="Class\農地基本台帳\各種ページ\農家検索\classPage農家世帯.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種ページ\非農地\姶良仕様\classPage非農地通知.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\システム\メインページ\CMainPage.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\CObj個人.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\申請\CObj申請.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\農地\CObj農地.vb" />
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\農家\CObj農家.vb" />
+    <Compile Include="Class\市町村別\C姶良市.vb" />
+    <Compile Include="Class\農地基本台帳\農家リストクラス\CNList.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\各種オブジェクト\CProperty検索条件.vb" />
+    <Compile Include="Class\システム\CSystem.vb" />
+    <Compile Include="Class\農地基本台帳\印刷\完成品\CPrint基本台帳.vb" />
+    <Compile Include="Class\市町村別\C市町村別.vb" />
+    <Compile Include="Class\農地基本台帳\農家リストクラス\C個人リスト.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\農家リストクラス\C申請リスト.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\農家リストクラス\C農地リスト.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\農家リストクラス\C農家リスト.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\農家リストクラス\検索条件\CPage検索.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Class\農地基本台帳\農家リストクラス\検索条件\C農地検索条件.vb" />
+    <Compile Include="Form\dlg住記選択.Designer.vb">
+      <DependentUpon>dlg住記選択.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlg住記選択.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\dlgInputMulti.Designer.vb">
+      <DependentUpon>dlgInputMulti.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlgInputMulti.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\dlgLoginForm.Designer.vb">
+      <DependentUpon>dlgLoginForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlgLoginForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\dlg総会選択.Designer.vb">
+      <DependentUpon>dlg総会選択.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlg総会選択.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\Form2.Designer.vb">
+      <DependentUpon>Form2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\Form2.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\frmInputData.designer.vb">
+      <DependentUpon>frmInputData.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\frmInputData.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\frmMain.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\frmMain.Designer.vb">
+      <DependentUpon>frmMain.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\dlg諮問意見書選択.Designer.vb">
+      <DependentUpon>dlg諮問意見書選択.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form\dlg諮問意見書選択.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Module\modCommon.vb" />
+    <Compile Include="Module\mod個人.vb" />
+    <Compile Include="Module\mod申請データ作成処理.vb" />
+    <Compile Include="Module\mod農地.vb" />
+    <Compile Include="Module\mod農地台帳.vb" />
+    <Compile Include="Module\mod農地基本台帳.vb" />
+    <Compile Include="Module\mod農地異動関連.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Resource1.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\設定XML\DSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\設定XML\DSet.vb">
+      <DependentUpon>DSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="開発ドキュメント\modTODO.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\dlgInputBWDate.resx">
+      <DependentUpon>dlgInputBWDate.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlgInputDate.resx">
+      <DependentUpon>dlgInputDate.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlgInputForm.resx">
+      <DependentUpon>dlgInputForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlgSelectDataGridView.resx">
+      <DependentUpon>dlgSelectDataGridView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlgTest.resx">
+      <DependentUpon>dlgTest.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlg複数地番検索.resx">
+      <DependentUpon>dlg複数地番検索.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlg住記選択.resx">
+      <DependentUpon>dlg住記選択.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlgInputMulti.resx">
+      <DependentUpon>dlgInputMulti.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlgLoginForm.resx">
+      <DependentUpon>dlgLoginForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlg総会選択.resx">
+      <DependentUpon>dlg総会選択.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\Form2.resx">
+      <DependentUpon>Form2.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\frmInputData.resx">
+      <DependentUpon>frmInputData.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\frmMain.resx">
+      <DependentUpon>frmMain.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\dlg諮問意見書選択.resx">
+      <DependentUpon>dlg諮問意見書選択.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource1.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <Content Include="manual_light.pdf" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram3.cd" />
+    <None Include="ClassDiagram4.cd" />
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="Resources\設定XML\DataListViewカラム設定.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\設定XML\DSet.xsc">
+      <DependentUpon>DSet.xsd</DependentUpon>
+    </None>
+    <None Include="Resources\設定XML\DSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DSet.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="Resources\設定XML\DSet.xss">
+      <DependentUpon>DSet.xsd</DependentUpon>
+    </None>
+    <Content Include="RPA標準フォーマット.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="農地基本台帳_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SplitterMid22.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Folder_Back.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Folder_stuffed.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\printer.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Exit.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\005_Task.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cab.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Collapse_large.bmp" />
+    <None Include="Resources\112_DownArrowShort_Blue.ico" />
+    <None Include="Resources\Overlay_preferences.ico" />
+    <None Include="Resources\Warning.png" />
+    <None Include="Resources\paste.png" />
+    <None Include="Resources\1435_ClipBoard.png" />
+    <None Include="Resources\Checkbox.bmp" />
+    <None Include="Resources\SuccessComplete.bmp" />
+    <None Include="Resources\SuccessComplete1.bmp" />
+    <None Include="Resources\田.ico" />
+    <None Include="Resources\農家個人.ico" />
+    <None Include="Resources\FARMER.ICO" />
+    <None Include="Resources\HOUSE.ICO" />
+    <None Include="Resources\LAND.ICO" />
+    <None Include="Resources\EXCEL.ico" />
+    <None Include="Resources\History.ico" />
+    <None Include="Resources\Operation.ico" />
+    <None Include="Resources\法人.ico" />
+    <None Include="Resources\生産法人.ico" />
+    <None Include="Resources\RowFilter.png" />
+    <None Include="Resources\Maintenance.ico" />
+    <None Include="Resources\Tools_Wrench.png" />
+    <None Include="Resources\search.bmp" />
+    <None Include="Resources\searchMinus.bmp" />
+    <None Include="Resources\営農情報.ico" />
+    <None Include="Resources\CLOSEFOLDERG.ico" />
+    <None Include="Resources\選挙関連.ico" />
+    <None Include="Resources\集計一覧.ico" />
+    <None Include="Resources\入力支援.ico" />
+    <None Include="Resources\help.ico" />
+    <None Include="Resources\Human.ico" />
+    <None Include="Resources\Find.ico" />
+    <None Include="Resources\174_magnify_uncompressed.ico" />
+    <None Include="Resources\FolderData\FolderTree.xml" />
+    <None Include="Resources\Map.ico" />
+    <None Include="Resources\分筆処理.ico" />
+    <Content Include="Resources\Interface.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Resources\M_BASICALL.XML">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Resources\PropertyGridについて.htm" />
+    <Content Include="Resources\土地履歴View.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Resources\畑.ico" />
+    <Content Include="Resources\設定XML\Interface.XML">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Resources\設定XML\基本画面.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="旧農地基本台帳様式.xml" />
+    <Content Include="要約書様式.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="農地台帳様式.xml" />
+    <Content Include="農地台帳要約書様式.xml" />
+    <Content Include="農地台帳閲覧用様式.xml" />
+    <Content Include="農地基本台帳様式.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="非農地通知書.xml" />
+    <Content Include="非農地通知発送文書.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Class\農地基本台帳\各種ページ\利用意向調査\" />
+    <Folder Include="Class\農地基本台帳\各種ページ\農地台帳データ出力\" />
+    <Folder Include="Resources\ParamFile\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="manual_light.pdf">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="旧農地基本台帳様式.xml">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="要約書様式.xml">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="農地台帳様式.xml">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="農地台帳要約書様式.xml">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="農地台帳閲覧用様式.xml">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="農地基本台帳様式.xml">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="非農地通知書.xml">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="非農地通知発送文書.xml">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

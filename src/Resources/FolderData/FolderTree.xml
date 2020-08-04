@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:MainDataTable="作物非表示" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="作物非表示">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="Code" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+      <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+        <xs:selector xpath=".//作物非表示" />
+        <xs:field xpath="Code" />
+      </xs:unique>
+    </xs:element>
+  </xs:schema>
+  <作物非表示>
+    <Code>1048</Code>
+  </作物非表示>
+  <作物非表示>
+    <Code>1049</Code>
+  </作物非表示>
+  <作物非表示>
+    <Code>1050</Code>
+  </作物非表示>
+  <作物非表示>
+    <Code>1051</Code>
+  </作物非表示>
+  <作物非表示>
+    <Code>1273or</Code>
+  </作物非表示>
+  <作物非表示>
+    <Code>1274or</Code>
+  </作物非表示>
+  <作物非表示>
+    <Code>1275or</Code>
+  </作物非表示>
+  <作物非表示>
+    <Code>1276or</Code>
+  </作物非表示>
+</NewDataSet>

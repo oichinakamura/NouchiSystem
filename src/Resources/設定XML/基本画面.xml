@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SettingList xmlns="http://tempuri.org/PageLayout.xsd">
+  <PageConfig Name="基本画面" CloseMode="CloseOK">
+    <QuadSplitContainer Name="QuadMain" StartDistance="25%" StartDistanceA="50%" StartDistanceB="50%">
+      <Orientation value="#オリエンテーション"/>
+      <PanelA>
+        <CanDragTabControl Name="TabA" AllowDrop="true" ImageSize="24">
+          <DropDownItems>
+            <ToolStripSeparator />
+            <ToolStripMenuItem Name="転用農地検索2" Text="転用農地検索" Image="SearchItem" OnClick=""/>
+            <ToolStripMenuItem Name="削除農地検索2" Text="削除農地検索" Image="SearchItem" OnClick=""/>
+            <ToolStripMenuItem Name="固定資産検索2" Text="固定資産検索" Image="SearchItem" OnClick=""/>
+            <ToolStripSeparator/>
+            <ToolStripMenuItem Name="住記取込検索2" Text="住記取込検索" Image="SearchItem" OnClick=""/>
+            <ToolStripMenuItem Name="削除個人検索2" Text="削除個人検索" Image="SearchItem" OnClick=""/>
+          </DropDownItems>
+          <TabPages>
+            <CCloseableTabPage Name="クラシックモード" Text="クラシックモード" Closeable="false">
+              <Body>
+                <BlockPanelControl Name="BlockPanelCol">
+                  <BlockPanels>
+                    <BlockPanel>
+                      <Body>
+                        <CustomTreeView Name="フォルダ" CustomType="農地基本台帳.CFolderTree"></CustomTreeView>
+                      </Body>
+                    </BlockPanel>
+                  </BlockPanels>
+                </BlockPanelControl>
+              </Body>
+            </CCloseableTabPage>
+          </TabPages>
+        </CanDragTabControl>
+      </PanelA>
+      <PanelB>
+        <SplitContainerEX Name="リスト選択オブジェクト" StartDistance="80%">
+          <Orientation value="Vertical"/>
+          <Panel1>
+            <CanDragTabControl Name="TabB" AllowDrop="true" ImageSize="24">
+              <TabPages>
+                <CustomNKListSK Name="農地リスト" Text="農地リスト" CustomType="農地基本台帳.C農地リスト" ImageSize="48" >
+                  <SearchBlcokPanel ContainerBlockPanel="BlockPanelCol"/>
+                </CustomNKListSK>
+                <CustomNKListSK Name="個人リスト" Text="個人リスト" CustomType="農地基本台帳.C個人リスト" ImageSize="48" >
+                  <SearchBlcokPanel ContainerBlockPanel="BlockPanelCol"/>
+                </CustomNKListSK>
+                <CustomNKListSK Name="土地履歴リスト" Text="土地履歴リスト" CustomType="農地基本台帳.C土地履歴リスト" ImageSize="48" >
+                  <SearchBlcokPanel ContainerBlockPanel="BlockPanelCol"/>
+                </CustomNKListSK>
+                <CustomNKListSK Name="農家リスト" Text="農家リスト" CustomType="農地基本台帳.C農家リスト" ImageSize="48" >
+                  <SearchBlcokPanel ContainerBlockPanel="BlockPanelCol"/>
+                </CustomNKListSK>
+              </TabPages>
+            </CanDragTabControl>
+          </Panel1>
+          <Panel2>
+            <BlockPanelControl Name="BlockPanelCol2">
+              <BlockPanels>
+                
+              </BlockPanels>
+            </BlockPanelControl>
+          </Panel2>
+        </SplitContainerEX>
+      </PanelB>
+      <PanelC>
+        <CanDragTabControl Name="TabC" ImageSize="24">
+          <TabPages>
+          </TabPages>
+        </CanDragTabControl>
+      </PanelC>
+      <PanelD>
+        <SplitContainerEX Name="データビューセパレータ" StartDistance="0%">
+          <Orientation value="Vertical"/>
+          <Panel1>
+            <CanDragTabControl Name="TabE" ImageSize="24"/>
+          </Panel1>
+          <Panel2>
+            <CanDragTabControl Name="TabD" ImageSize="24">
+              <TabPages>
+                <CustomTabPage Name="TaskList" CustomType="農地基本台帳.CTaskList" />
+              </TabPages>
+            </CanDragTabControl>
+          </Panel2>
+        </SplitContainerEX>
+      </PanelD>
+    </QuadSplitContainer>
+    <DockablePages>
+      <DockingInfo Name="DataViewCollection" DefaultTabControl="TabC">
+        <CDataViewCollection >
+          <IconImageList>48</IconImageList>
+          <DefaultTabCtrl>TabD</DefaultTabCtrl>
+        </CDataViewCollection>
+      </DockingInfo>
+    </DockablePages>
+    <EquippedToolStrip>
+      <ToolStripMenuItem Name="早見表" Text="早見表" OnClick=""/>
+      <ToolStripMenuItem Name="総会資料" Text="総会資料" Image="Find" OnClick=""/>
+      <ToolStripMenuItem Name="諮問意見書作成" Text="諮問意見書作成" Image="Find" OnClick=""/>
+      <ToolStripDropDownButton Name="農地関連検索" Text="農地関連検索" Image="Find">
+        <DropDownItems>
+          <ToolStripMenuItem Name="転用農地検索" Text="転用農地検索" Image="SearchItem" OnClick=""/>
+          <ToolStripMenuItem Name="削除農地検索" Text="削除農地検索" Image="SearchItem" OnClick=""/>
+          <ToolStripSeparator/>
+          <ToolStripMenuItem Name="固定資産検索" Text="固定資産検索" Image="SearchItem" OnClick=""/>
+        </DropDownItems>
+      </ToolStripDropDownButton>
+      <ToolStripDropDownButton Name="人・農家関連検索" Text="人・農家関連検索" Image="Find">
+        <DropDownItems>
+          <ToolStripMenuItem Name="住記取込検索" Text="住記取込検索" Image="SearchItem" OnClick=""/>
+          <ToolStripSeparator/>
+          <ToolStripMenuItem Name="削除個人検索" Text="削除個人検索" Image="SearchItem" OnClick=""/>
+        </DropDownItems>
+      </ToolStripDropDownButton>
+      <OrientationButton Name="OrientationButton" Alignment="Right" Click="QuadMain.TurnView" Orientation="#オリエンテーション" />
+    </EquippedToolStrip>
+  </PageConfig>
+  <PageConfig Name="議案選択" CloseMode="CloseOK">
+    <ToolStripContainer Name="ToolStripContainer1">
+      <TopToolStripPanel>
+        <ToolStrip Name="ToolStrip1" GripStyle="Hidden" Stretch="true">
+          <Items>
+            <ToolStripLabel Name="Label受付日検索期間" Text="受付日検索期間"/>
+            <ToolStripDateTimePicker Name="DT開始年月日" AutoSize="true"/>
+            <ToolStripLabel Text="～"/>
+            <ToolStripDateTimePicker Name="DT終了年月日" AutoSize="true"/>
+            <ToolStripButton Name="Btn再読込" Alignment="Right" Text="再読込み" OnClick=""/>
+            <ToolStripLabel Name="txt対象年月" Alignment="Right" BackColor="#FFFFFF00" Text=""/>
+          </Items>
+        </ToolStrip>
+      </TopToolStripPanel>
+      <ContentPanel>
+        <SplitContainerEX Name="SP1" StartDistance="80%">
+          <Orientation value="Vertical"/>
+          <Panel1>
+            <ToolStripContainer Name="pSC1">
+              <TopToolStripPanel>
+                <ToolStrip Name="Ts1" Stretch="true" GripStyle="Hidden">
+                  <Items>
+                    <ToolStripButton Name="btn全議案選択" Text="全議案選択" OnClick=""/>
+                    <ToolStripButton Name="btn全議案解除" Text="全議案解除" OnClick=""/>
+                  </Items>
+                </ToolStrip>
+
+              </TopToolStripPanel>
+              <ContentPanel>
+                <TabControl Name="mvarTab"/>
+
+              </ContentPanel>
+            </ToolStripContainer>
+          </Panel1>
+          <Panel2>
+            <ToolStripContainer Name="pSC2">
+              <ContentPanel>
+                <PropertyGrid Name="mvarPropertyG" ToolbarVisible="false"/>
+              </ContentPanel>
+            </ToolStripContainer>
+          </Panel2>
+        </SplitContainerEX>
+      </ContentPanel>
+      <BottomToolStripPanel>
+        <StatusStrip Name="mvarStatusStrip" GripStyle="Hidden" Stretch="true">
+          <Items>
+            <ToolStripButton Alignment="Right" Name="Cancel" Text="Cancel" OnClick=""/>
+            <ToolStripButton Alignment="Right" Name="OK" Text="OK" OnClick=""/>
+          </Items>
+        </StatusStrip>
+      </BottomToolStripPanel>
+    </ToolStripContainer>
+  </PageConfig>
+  <PageConfig Name="諮問意見書選択" CloseMode="CloseOK">
+    <ToolStripContainer Name="ToolStripContainer1">
+      <TopToolStripPanel>
+        <ToolStrip Name="ToolStrip1" GripStyle="Hidden" Stretch="true">
+          <Items>
+            <ToolStripLabel Name="Label受付日検索期間" Text="受付日検索期間"/>
+            <ToolStripDateTimePicker Name="DT開始年月日" AutoSize="true"/>
+            <ToolStripLabel Text="～"/>
+            <ToolStripDateTimePicker Name="DT終了年月日" AutoSize="true"/>
+            <ToolStripButton Name="Btn再読込" Alignment="Right" Text="再読込み" OnClick=""/>
+            <ToolStripLabel Name="txt対象年月" Alignment="Right" BackColor="#FFFFFF00" Text=""/>
+          </Items>
+        </ToolStrip>
+      </TopToolStripPanel>
+      <ContentPanel>
+        <ToolStripContainer Name="pSC1">
+          <TopToolStripPanel>
+            <ToolStrip Name="Ts1" Stretch="true" GripStyle="Hidden">
+              <Items>
+                <ToolStripButton Name="btn全議案選択" Text="全議案選択" OnClick=""/>
+                <ToolStripButton Name="btn全議案解除" Text="全議案解除" OnClick=""/>
+              </Items>
+            </ToolStrip>
+
+          </TopToolStripPanel>
+          <ContentPanel>
+            <TabControl Name="mvarTab"/>
+
+          </ContentPanel>
+        </ToolStripContainer>
+      </ContentPanel>
+      <BottomToolStripPanel>
+        <StatusStrip Name="mvarStatusStrip" GripStyle="Hidden" Stretch="true">
+          <Items>
+            <ToolStripButton Alignment="Right" Name="Cancel" Text="Cancel" OnClick=""/>
+            <ToolStripButton Alignment="Right" Name="OK" Text="OK" OnClick=""/>
+          </Items>
+        </StatusStrip>
+      </BottomToolStripPanel>
+    </ToolStripContainer>
+  </PageConfig>
+  <PageConfig Name="非農地通知" CloseMode="CloseOK">
+    <TabControl Name="MainTab">
+      <TabPages>
+        <TabPage Name="T出力" Text="出力">
+          <Body>
+            <DataGridViewWithDataView Name="G出力"/>
+          </Body>
+        </TabPage>
+        <TabPage Name="T送付先" Text="送付先">
+          <Body>
+            <DataGridViewWithDataView Name="G送付先"/>
+          </Body>
+        </TabPage>
+      </TabPages>
+    </TabControl>
+    <EquippedToolStrip>
+    </EquippedToolStrip>
+  </PageConfig>
+  <PageConfig Name="農地台帳一括印刷" CloseMode="CloseOK">
+    <SplitContainerEX Name="農地台帳一括印刷" StartDistance="20%">
+      <Orientation value="Vertical"/>
+      <Panel1>
+        <TreeView Name="TreeView" CheckBoxes="true" >
+          <TreeNodes/>
+        </TreeView>
+      </Panel1>
+      <Panel2>
+        <ToolStripContainer Name="TS1">
+          <TopToolStripPanel>
+            <ToolStrip Name="TX1">
+            </ToolStrip>
+          </TopToolStripPanel>
+          <ContentPanel>
+            <DataGridViewWithDataView Name="mvarGr"/>
+          </ContentPanel>
+        </ToolStripContainer>
+      </Panel2>
+    </SplitContainerEX>
+    <EquippedToolStrip>
+      <ToolStripButton Name="全選択" Text="全選択" Image="SuccessComplete" ImageTransparentColor="#FFFF00FF" OnClick=""/>
+      <ToolStripButton Name="選択解除" Text="選択解除" Image="UnCheck" ImageTransparentColor="#FFFF00FF" OnClick=""/>
+      <ToolStripButton Name="印刷" Text="印刷" Image="printer" OnClick=""/>
+      <ToolStripButton Name="チェック者リスト" Text="チェック者リスト(但し農地関係者のみ絞り込み)" Image="List" OnClick=""/>
+    </EquippedToolStrip>
+  </PageConfig>
+</SettingList>

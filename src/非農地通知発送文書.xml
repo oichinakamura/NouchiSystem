@@ -1,0 +1,479 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>acer_him08</Author>
+  <LastAuthor>100275</LastAuthor>
+  <LastPrinted>2013-08-29T11:33:17Z</LastPrinted>
+  <Created>2013-07-30T02:53:13Z</Created>
+  <LastSaved>2013-08-29T09:51:46Z</LastSaved>
+  <Version>11.9999</Version>
+ </DocumentProperties>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>12330</WindowHeight>
+  <WindowWidth>28035</WindowWidth>
+  <WindowTopX>360</WindowTopX>
+  <WindowTopY>75</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="11"
+    ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="m213260762">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior/>
+  </Style>
+  <Style ss:ID="s21">
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s22">
+   <Alignment ss:Vertical="Center"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s23">
+   <Font ss:FontName="ＭＳ ゴシック" x:CharSet="128" x:Family="Modern" ss:Size="13"
+    ss:Color="#000000" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="s25">
+   <Alignment ss:Horizontal="Distributed" ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s26">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s27">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:Indent="2" ss:WrapText="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s30">
+   <Alignment ss:Horizontal="Distributed" ss:Vertical="Center"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s32">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top" ss:ShrinkToFit="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s33">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Bottom"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s34">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Center"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s35">
+   <Alignment ss:Horizontal="Right" ss:Vertical="Center"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s36">
+   <Borders/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s37">
+   <Alignment ss:Vertical="Justify" ss:WrapText="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s39">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Justify" ss:WrapText="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="16"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s40">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s42">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s44">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top" ss:WrapText="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="13"
+    ss:Color="#000000" ss:Bold="1"/>
+  </Style>
+  <Style ss:ID="s46">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s48">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Top" ss:WrapText="1"/>
+   <Font ss:FontName="ＭＳ Ｐゴシック" x:CharSet="128" x:Family="Modern" ss:Size="13"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s49">
+   <Borders/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior/>
+  </Style>
+  <Style ss:ID="s61">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior/>
+  </Style>
+  <Style ss:ID="s62">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Distributed" ss:WrapText="1"/>
+   <Borders/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+   <Interior/>
+  </Style>
+  <Style ss:ID="s64">
+   <Alignment ss:Horizontal="Left" ss:Vertical="Distributed" ss:WrapText="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+  <Style ss:ID="s66">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Top" ss:WrapText="1"/>
+   <Font ss:FontName="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" ss:Size="12"
+    ss:Color="#000000"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="非農地通知書の送付について">
+  <Names>
+   <NamedRange ss:Name="Print_Area" ss:RefersTo="=非農地通知書の送付について!R1C1:R57C7"/>
+  </Names>
+  <Table ss:ExpandedColumnCount="8" ss:ExpandedRowCount="68" x:FullColumns="1"
+   x:FullRows="1" ss:StyleID="s21" ss:DefaultColumnWidth="110.25"
+   ss:DefaultRowHeight="19.5">
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="104.25" ss:Span="1"/>
+   <Column ss:Index="3" ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="72"/>
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="82.5"/>
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="43.5"/>
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="72.75"/>
+   <Column ss:StyleID="s21" ss:AutoFitWidth="0" ss:Width="58.5"/>
+   <Row ss:AutoFitHeight="0" ss:Height="9">
+    <Cell ss:StyleID="s22"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s22"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s22"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s22"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s22"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s22"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s22"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0"/>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s23"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ユウビンバンゴウ</PhoneticText><Data
+      ss:Type="String">　〒{郵便番号}</Data><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:Index="6" ss:MergeAcross="1" ss:StyleID="s25"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">アイノウイダイハッコウバンゴウゴウ</PhoneticText><Data
+      ss:Type="String">姶農委第 {発行番号} 号</Data><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s26"/>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:MergeAcross="2" ss:MergeDown="1" ss:StyleID="s27"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ジュウショ</PhoneticText><Data
+      ss:Type="String">{住所}</Data><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s27"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:Index="6" ss:MergeAcross="1" ss:StyleID="s30"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ハッコウネンガッピ</PhoneticText><Data
+      ss:Type="String">{発行年月日}</Data><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="16.5">
+    <Cell ss:Index="4" ss:StyleID="s27"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="24.75">
+    <Cell ss:MergeAcross="2" ss:StyleID="s32"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">シメイ</PhoneticText><ss:Data
+      ss:Type="String" xmlns="http://www.w3.org/TR/REC-html40"><Font
+       html:Color="#000000"> </Font><Font html:Size="14" html:Color="#000000"> </Font><B><Font
+        html:Size="14" html:Color="#000000">{氏名}</Font></B></ss:Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s27"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s33"><Data ss:Type="String">姶 良 市 農 業 委 員 会</Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="17.25">
+    <Cell ss:MergeAcross="3" ss:StyleID="s66"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">サマブン</PhoneticText><Data
+      ss:Type="String">{様分}</Data><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s34"><Data ss:Type="String">会  長   山 口　　正 春</Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell><PhoneticText xmlns="urn:schemas-microsoft-com:office:excel">ハッソウバンゴウ</PhoneticText><Data
+      ss:Type="String">  （発送番号 {通知番号}）</Data><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:Index="3" ss:StyleID="s35"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s35"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="6.75">
+    <Cell ss:Index="7" ss:StyleID="s36"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:MergeAcross="6" ss:StyleID="s39"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">コウサクホウキチゼンタイチョウサカカワヒノウチツウチショソウフ</PhoneticText><Data
+      ss:Type="String">耕作放棄地全体調査に係る非農地通知書の送付について</Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s37"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:MergeAcross="6" ss:MergeDown="7" ss:StyleID="s40"><Data
+      ss:Type="String">　農地は、農業生産にとって最も基礎的な資源であり、食料安定供給の重要な基盤であります。しかし農業者の減少・高齢化等により耕作放棄地が増加し、その解消が重要な課題となっています。このため、農業委員会では毎年、国・県指導のもと全筆調査を行い、農地に戻せる土地についてはその解消を図り、戻せない土地は非農地としています。&#10;　昨年度調査において貴殿の所有・管理されている農地で非農地と判断された土地について非農地通知書を同封いたしましたのでご確認ください。&#10;　なお、非農地通知書は登記名義で通知してあります。送付先は農家台帳を基に管理者等を調査しておりますが、登記時の記録しかなく実状と異なる場合が考えられます。また現地調査から期間が経過しておりますので、現状と合わない点、間違い等がございましたらお手数ですがご連絡お願いいたします。</Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Span="5"/>
+   <Row ss:Index="20" ss:AutoFitHeight="0" ss:Height="10.5"/>
+   <Row ss:AutoFitHeight="0" ss:Height="7.5">
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:MergeAcross="6" ss:StyleID="s44"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">ヒノウチシンリンゲンヤカコウサクフカノウノウチコト</PhoneticText><Data
+      ss:Type="String">★非農地とは、森林･原野化しており耕作することが不可能な農地の事です。</Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="7.5">
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s42"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="20.25">
+    <Cell ss:MergeAcross="6" ss:StyleID="s46"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">キ</PhoneticText><Data
+      ss:Type="String">記</Data><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:MergeAcross="6" ss:MergeDown="1" ss:StyleID="s48"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">トウキ</PhoneticText><ss:Data
+      ss:Type="String" xmlns="http://www.w3.org/TR/REC-html40"><Font
+       html:Color="#000000">1　</Font><B><Font html:Color="#000000">所有者にお願いする事</Font></B><Font
+       html:Face="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" html:Size="12"
+       html:Color="#000000">&#10;　○法務局で地目変更（農地から山林・原野などへ）登記をを行ってください。&#10;　　ア　登記の際に同封の非農地通知書が必要となります。&#10;</Font></ss:Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="25.5"/>
+   <Row ss:AutoFitHeight="0" ss:Height="6.9375">
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15">
+    <Cell ss:MergeAcross="6" ss:MergeDown="2" ss:StyleID="s40"><Data
+      ss:Type="String">　　イ　登記手続き方法について&#10;　　　     　自分でされる場合　・・　法務局にご相談ください。&#10;　　　  　　委託される場合　　・・　司法書士・土地家屋調査士にご相談ください。</Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15" ss:Span="1"/>
+   <Row ss:Index="31" ss:AutoFitHeight="0" ss:Height="6.9375">
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15">
+    <Cell ss:MergeAcross="6" ss:MergeDown="1" ss:StyleID="s40"><Data
+      ss:Type="String">　　ウ　登記手数料について&#10;        　　　 自分で手続きされる場合は原則無料です(詳細は法務局にお尋ねください)&#10;</Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15"/>
+   <Row ss:AutoFitHeight="0" ss:Height="6.9375">
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15">
+    <Cell ss:MergeAcross="6" ss:MergeDown="1" ss:StyleID="s40"><Data
+      ss:Type="String">　　エ　手間もかかり、委託の場合は料金も発生しますので、強制ではありません。&#10;      　　また、地目変更をしないからといって罰則等もありません。&#10;</Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15"/>
+   <Row ss:AutoFitHeight="0" ss:Height="6.9375">
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15">
+    <Cell ss:MergeAcross="6" ss:MergeDown="2" ss:StyleID="s40"><Data
+      ss:Type="String">　　オ　『鹿児島地方法務局 霧島支局』　姶良市の土地の管轄になります。&#10;　　　　　　所在：鹿児島県霧島市国分中央3-42-1  ℡ 0995-45-0064&#10;　　　　　　  ※ 県外等在住の方も霧島支局での取り扱いとなります。</Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15" ss:Span="1"/>
+   <Row ss:Index="41" ss:AutoFitHeight="0" ss:Height="9">
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15">
+    <Cell ss:MergeAcross="6" ss:MergeDown="3" ss:StyleID="s48"><ss:Data
+      ss:Type="String" xmlns="http://www.w3.org/TR/REC-html40"><Font
+       html:Color="#000000">2　</Font><B><Font html:Color="#000000">農業委員会で行うこと</Font></B><Font
+       html:Face="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" html:Size="12"
+       html:Color="#000000">&#10;　　ア　農業委員会に設置してある農地基本台帳の整備・・・ 農地から外します。&#10;　　イ　税務課へ報告・・・　税務課確認のうえ問題なければ課税台帳の地目が農地から&#10;　　　　　　 　　　　　　　  山林・原野などへ変更されます。</Font></ss:Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15" ss:Span="2"/>
+   <Row ss:Index="46" ss:AutoFitHeight="0" ss:Height="9.75">
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15">
+    <Cell ss:MergeAcross="6" ss:MergeDown="5" ss:StyleID="s48"><ss:Data
+      ss:Type="String" xmlns="http://www.w3.org/TR/REC-html40"><Font
+       html:Color="#000000">3　</Font><B><Font html:Color="#000000">その他注意事項</Font></B><Font
+       html:Face="HG丸ｺﾞｼｯｸM-PRO" x:CharSet="128" x:Family="Modern" html:Size="12"
+       html:Color="#000000">&#10;　　ア　法務局で地目変更されますと、農地法の規制を受けなくなり、売買・贈与等の&#10;　　　　際に農業委員会の許可が不要になります。&#10;　　イ　法務局の調査結果によっては、山林・原野と認められない場合もあります。&#10;　　ウ　以前、農業委員会で許可を受けた土地が含まれている場合、法務局で地目変更&#10;　　　　の手続きをされていないものと思われます。</Font></ss:Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15" ss:Span="4"/>
+   <Row ss:Index="53" ss:AutoFitHeight="0" ss:Height="11.25">
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s40"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15">
+    <Cell ss:StyleID="s49"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:MergeAcross="4" ss:MergeDown="2" ss:StyleID="m213260762"><PhoneticText
+      xmlns="urn:schemas-microsoft-com:office:excel">トアカゴシマケンアイラシガモウチョウカミギュウトクバンチアイラシノウギョウイインカイ</PhoneticText><ss:Data
+      ss:Type="String" xmlns="http://www.w3.org/TR/REC-html40"><Font
+       html:Color="#000000">○問い合わせ&#10;　</Font><Font html:Face="ＭＳ Ｐゴシック"
+       x:CharSet="128" x:Family="Modern" html:Color="#000000">〒899-5392</Font><Font
+       html:Color="#000000">　鹿児島県姶良市蒲生町上久徳</Font><Font html:Face="ＭＳ Ｐゴシック"
+       x:CharSet="128" x:Family="Modern" html:Color="#000000">２３９９番地</Font><Font
+       html:Color="#000000">&#10;   姶良市農業委員会　℡</Font><Font html:Face="ＭＳ Ｐゴシック"
+       x:CharSet="128" x:Family="Modern" html:Color="#000000">　0995-52-1211　　FAX　0995-52-1219</Font></ss:Data><NamedCell
+      ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15">
+    <Cell ss:StyleID="s61"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15">
+    <Cell ss:StyleID="s49"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="6.75">
+    <Cell ss:StyleID="s49"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s62"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s62"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s62"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s62"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s62"><NamedCell ss:Name="Print_Area"/></Cell>
+    <Cell ss:StyleID="s62"><NamedCell ss:Name="Print_Area"/></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Span="1"/>
+   <Row ss:Index="60" ss:AutoFitHeight="0">
+    <Cell ss:Index="7" ss:StyleID="s35"/>
+   </Row>
+   <Row ss:AutoFitHeight="0">
+    <Cell ss:MergeAcross="6" ss:MergeDown="7" ss:StyleID="s64"/>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Span="6"/>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Header x:Margin="0.3"/>
+    <Footer x:Margin="0.3"/>
+    <PageMargins x:Bottom="0.32" x:Left="0.84" x:Right="0.37" x:Top="0.37"/>
+   </PageSetup>
+   <Unsynced/>
+   <Print>
+    <ValidPrinterInfo/>
+    <PaperSizeIndex>9</PaperSizeIndex>
+    <HorizontalResolution>600</HorizontalResolution>
+    <VerticalResolution>600</VerticalResolution>
+   </Print>
+   <Selected/>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <ActiveRow>8</ActiveRow>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>

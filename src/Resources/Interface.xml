@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE DataViewCongig [
+  <!ELEMENT DataViewCongig (ControlGroups|DataViewNext)*>
+  <!ELEMENT ControlGroups (ControlGroup)*>
+  <!ELEMENT ControlGroup (DateTimePickerPlus|TextBoxPlus)*>
+  <!ELEMENT DataViewNext (FlowDirection?,CreateButton?,GroupBoxPlus+)>
+  <!ELEMENT FlowDirection (#PCDATA)>
+  <!ELEMENT CreateButton (#PCDATA)>
+  <!ELEMENT GroupBoxPlus (CustomControl|SetControlGroup|DateTimePickerPlus|TextBoxPlus|OptionButtonPlus|RichTextBoxNext|CheckButtonPlus|ComboList|GroupBoxPlus|FitLabelWidth)*>
+  <!ELEMENT TextBoxPlus (ComboBoxPlus*)>
+  <!ELEMENT DateTimePickerPlus (#PCDATA)>
+  <!ELEMENT OptionButtonPlus (#PCDATA)>
+  <!ELEMENT CustomControl (農地台帳.農地リスト)*>
+  <!ELEMENT ComboBoxPlus (#PCDATA)>
+  <!ELEMENT ComboList (#PCDATA)>
+  <!ELEMENT CheckButtonPlus (#PCDATA)>
+  <!ELEMENT SetControlGroup (#PCDATA)>
+  <!ELEMENT RichTextBoxNext (#PCDATA)>
+  <!ELEMENT FitLabelWidth (#PCDATA)>
+  <!ELEMENT 農地台帳.農地リスト (#PCDATA)>
+
+  <!ATTLIST ControlGroup Name CDATA #REQUIRED>
+  <!ATTLIST SetControlGroup Value CDATA #REQUIRED>
+  <!ATTLIST DataViewNext Name CDATA #REQUIRED>
+  <!ATTLIST FlowDirection Value CDATA #REQUIRED>
+  <!ATTLIST GroupBoxPlus Name CDATA #REQUIRED>
+  <!ATTLIST CreateButton Key CDATA #REQUIRED
+                        Text CDATA #REQUIRED>
+  <!ATTLIST TextBoxPlus FieldName CDATA #REQUIRED
+                        TextBoxMode CDATA #IMPLIED
+                        ReadOnly CDATA #IMPLIED
+                        WithLabel CDATA #IMPLIED
+                        Width CDATA #IMPLIED
+                        Height CDATA #IMPLIED
+                        Dropable CDATA #IMPLIED
+                        BreakLine CDATA #IMPLIED>
+  <!ATTLIST DateTimePickerPlus FieldName CDATA #REQUIRED
+                        ReadOnly CDATA #IMPLIED
+                        WithLabel CDATA #IMPLIED
+                        BreakLine CDATA #IMPLIED>
+  <!ATTLIST OptionButtonPlus FieldName CDATA #REQUIRED
+                        ReadOnly CDATA #IMPLIED
+                        Params CDATA #REQUIRED
+                        WithLabel CDATA #IMPLIED
+                        BreakLine CDATA #IMPLIED>
+  <!ATTLIST CheckButtonPlus FieldName CDATA #REQUIRED
+                        ReadOnly CDATA #IMPLIED
+                        YesCaption CDATA #REQUIRED
+                        NoCaption CDATA #REQUIRED
+                        WithLabel CDATA #IMPLIED
+                        BreakLine CDATA #IMPLIED>
+  <!ATTLIST ComboBoxPlus DisplayMember CDATA #REQUIRED
+                        ValueMember CDATA #REQUIRED
+                        Width CDATA #IMPLIED
+                        DataSource CDATA #REQUIRED
+                        BreakLine CDATA #IMPLIED>
+  <!ATTLIST ComboList  FieldName CDATA #REQUIRED
+                        ListSource CDATA #REQUIRED
+                        WithLabel CDATA #IMPLIED
+                        Width CDATA #IMPLIED
+                        BreakLine CDATA #IMPLIED>
+  <!ATTLIST RichTextBoxNext FieldName CDATA #REQUIRED
+                        TextBoxMode CDATA #IMPLIED
+                        ReadOnly CDATA #IMPLIED
+                        WithLabel CDATA #IMPLIED
+                        Width CDATA #IMPLIED
+                        Height CDATA #IMPLIED
+                        Dropable CDATA #IMPLIED
+                        BreakLine CDATA #IMPLIED>
+]>
+<DataViewCongig>
+  <ControlGroups>
+    <ControlGroup Name="基本項目A">
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="ID" ReadOnly="IsReadOnly" WithLabel="ID" Width="80" BreakLine="改行なし" />
+      <DateTimePickerPlus FieldName="更新日" WithLabel="更新日" ReadOnly="IsCanEdit" BreakLine="改行あり" />
+    </ControlGroup>
+  </ControlGroups>
+  <DataViewNext Name="D_土地履歴">
+    <FlowDirection Value="LeftToRight"/>
+    <CreateButton Key="土地を呼ぶ" Text="土地を呼ぶ"/>
+    <GroupBoxPlus Name="管理情報">
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="ID" ReadOnly="IsReadOnly" WithLabel="ID" Width="80" BreakLine="改行なし" />
+      <!--<DateTimePickerPlus FieldName="更新日" WithLabel="更新日" ReadOnly="IsCanEdit" BreakLine="改行なし" />-->
+      <DateTimePickerPlus FieldName="入力日" WithLabel="更新日" ReadOnly="IsCanEdit" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="LID" ReadOnly="IsCanEdit" WithLabel="農地ID" BreakLine="改行なし" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="農地土地所在" WithLabel="土地所在" ReadOnly="IsReadOnly" Width="400" BreakLine="改行あり" />
+      <DateTimePickerPlus FieldName="異動日" WithLabel="異動日" ReadOnly="IsCanEdit" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="異動事由" WithLabel="異動事由" ReadOnly="IsCanEdit" Width="80" >
+        <ComboBoxPlus DataSource="土地異動事由" DisplayMember="名称" ValueMember="ID" Width="200" BreakLine="改行あり"/>
+      </TextBoxPlus>
+      <RichTextBoxNext FieldName="内容" WithLabel="内容" Width="600" BreakLine="改行あり"></RichTextBoxNext>
+    </GroupBoxPlus>
+  </DataViewNext>
+  <DataViewNext Name="D:個人Info">
+    <FlowDirection Value="LeftToRight"/>
+    <GroupBoxPlus Name="管理情報">
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="ID" ReadOnly="IsReadOnly" WithLabel="ID" Width="80" BreakLine="改行なし" />
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="世帯ID" ReadOnly="IsReadOnly" WithLabel="世帯ID" Width="80" BreakLine="改行なし" />
+      <DateTimePickerPlus FieldName="更新日" WithLabel="更新日" ReadOnly="IsCanEdit" BreakLine="改行あり" />
+      <FitLabelWidth/>
+    </GroupBoxPlus>
+    <GroupBoxPlus Name="住記情報">
+      <TextBoxPlus TextBoxMode="Free" FieldName="フリガナ" ReadOnly="IsCanEdit" WithLabel="フリガナ" Width="200" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="氏名" ReadOnly="IsCanEdit" WithLabel="氏名" Width="200" BreakLine="改行あり" />
+      <OptionButtonPlus FieldName= "性別" Params="男,女,未入力,法人" WithLabel="性別" BreakLine="改行あり"/>
+      <DateTimePickerPlus FieldName="生年月日" WithLabel="生年月日" ReadOnly="IsCanEdit" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="続柄1" WithLabel="続柄1" ReadOnly="IsCanEdit" Width="80" >
+        <ComboBoxPlus DataSource="V_続柄" DisplayMember="名称" ValueMember="ID"  BreakLine="改行なし"/>
+      </TextBoxPlus>
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="続柄2" WithLabel="続柄2" ReadOnly="IsCanEdit" Width="80" >
+        <ComboBoxPlus DataSource="V_続柄" DisplayMember="名称" ValueMember="ID"  BreakLine="改行あり"/>
+      </TextBoxPlus>
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="続柄3" WithLabel="続柄3" ReadOnly="IsCanEdit" Width="80" >
+        <ComboBoxPlus DataSource="V_続柄" DisplayMember="名称" ValueMember="ID"  BreakLine="改行なし"/>
+      </TextBoxPlus>
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="続柄4" WithLabel="続柄4" ReadOnly="IsCanEdit" Width="80" >
+        <ComboBoxPlus DataSource="V_続柄" DisplayMember="名称" ValueMember="ID"  BreakLine="改行あり"/>
+      </TextBoxPlus>
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="住民区分" WithLabel="住民区分" ReadOnly="IsCanEdit" Width="80" >
+        <ComboBoxPlus DataSource="V_住民区分" DisplayMember="名称" ValueMember="ID"  BreakLine="改行あり"/>
+      </TextBoxPlus>
+      <TextBoxPlus TextBoxMode="Free" FieldName="郵便番号" WithLabel="郵便番号" ReadOnly="IsCanEdit" Width="200" BreakLine="改行なし" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="電話番号" WithLabel="電話番号" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="FAX番号" WithLabel="FAX番号" ReadOnly="IsCanEdit" Width="200" BreakLine="改行なし" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="メールアドレス" WithLabel="メールアドレス" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="市町村ID" WithLabel="市町村ID" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="住所" WithLabel="住所" ReadOnly="IsCanEdit" Width="400" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="送付先郵便番号" WithLabel="送付先郵便番号" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="送付先住所" WithLabel="送付先住所" ReadOnly="IsCanEdit" Width="400" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="行政区ID" WithLabel="行政区" ReadOnly="IsCanEdit" Width="80" >
+        <ComboBoxPlus DataSource="V_行政区" DisplayMember="名称" ValueMember="ID"  BreakLine="改行あり"/>
+      </TextBoxPlus>
+      <OptionButtonPlus FieldName= "異動区分" Params="なし,転入,転出,死亡,転居" WithLabel="異動区分" BreakLine="改行なし"/>
+      <DateTimePickerPlus FieldName="住記異動日" WithLabel="異動年月日" ReadOnly="IsCanEdit" BreakLine="改行あり" />
+      <CheckButtonPlus FieldName="注意区分" YesCaption="要注意" NoCaption="設定無"  WithLabel= "注意区分"/>
+      <FitLabelWidth/>
+    </GroupBoxPlus>
+    <GroupBoxPlus Name="農業従事情報">
+      <OptionButtonPlus FieldName= "農業改善計画認定" Params="なし,認定農業者,担い手農家,農地所有適格法人,認定農業者＋担い手農家,認定農業者＋農地所有適格法人,認定新規就農者" WithLabel="認定項目" BreakLine="改行あり"/>
+      <OptionButtonPlus FieldName= "担い手等の区分" Params="なし,認定農業者,新規就農者,水準到達者,特定農業団体,集落営農組織,育成予定農業者,農外参入企業,地域内農業者,地域外参入者,調査中" WithLabel="担い手等の区分" BreakLine="改行あり"/>
+      <DateTimePickerPlus FieldName="認定日" WithLabel="認定農業者認定日" BreakLine="改行なし"/>
+      <DateTimePickerPlus FieldName="新規就農者認定日" WithLabel="新規就農者認定日" BreakLine="改行あり"/>
+      <OptionButtonPlus FieldName= "あっせん候補者区分" Params="設定なし,あっせん候補者,調査中" WithLabel="あっせん候補者" BreakLine="改行あり"/>
+      <DateTimePickerPlus FieldName="あっせん登録日" WithLabel="あっせん登録日" BreakLine="改行なし"/>
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="あっせん登録番号" WithLabel="あっせん登録番号" ReadOnly="IsCanEdit" Width="80" BreakLine="改行あり" />
+      <CheckButtonPlus FieldName="世帯責任者" YesCaption="あり" NoCaption="なし"  WithLabel= "世帯責任者"/>
+      <CheckButtonPlus FieldName="農業経営者" YesCaption="あり" NoCaption="なし"  WithLabel= "農業経営者"/>
+      <CheckButtonPlus FieldName="農業跡継ぎ" YesCaption="あり" NoCaption="なし"  WithLabel= "農業あとつぎ" BreakLine="改行あり"/>
+      <OptionButtonPlus FieldName= "跡継ぎ区分" Params="なし,あとつぎ,予定者,志望者,調査中" WithLabel="跡継ぎ区分" BreakLine="改行なし"/>
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="農業従事日数" WithLabel="従事日数" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="関連農業者数" WithLabel="関連農業者数" ReadOnly="IsCanEdit" Width="200" BreakLine="改行なし" />
+      <OptionButtonPlus FieldName= "自家農業従事程度" Params="未登録,基幹,補助,臨時,その他,調査中" WithLabel="農業従事度" BreakLine="改行あり"/>
+      <OptionButtonPlus FieldName= "兼業形態" Params="未登録,恒常,出稼,臨時,自営,その他,調査中" WithLabel="兼業形態" BreakLine="改行あり"/>
+      <ComboList FieldName="職業" ListSource="職業" WithLabel="職業" BreakLine="改行あり"/>
+      <OptionButtonPlus FieldName= "在留資格" Params="なし,永住者,日本人の配偶者等,永住者の配偶者等,定住者,その他,調査中" WithLabel="認定項目" BreakLine="改行あり"/>
+      <FitLabelWidth/>
+    </GroupBoxPlus>
+    <GroupBoxPlus Name="農業者年金情報">
+      <OptionButtonPlus FieldName= "農年加入受給種別" Params="-,旧制度加入者,旧制度受給者,新制度加入者,新制度受給者" WithLabel="農業者年金種別" BreakLine="改行あり"/>
+      <OptionButtonPlus FieldName= "経営移譲種別" Params="なし,後継者,第三者,分割,終了,調査中" WithLabel="経営移譲(継承)種別" BreakLine="改行あり"/>
+      <DateTimePickerPlus FieldName="経営移譲終了日" WithLabel="移譲終了(継承終了)日" BreakLine="改行あり"/>
+      <DateTimePickerPlus FieldName="経営移譲裁定日" WithLabel="移譲(継承)裁定日" BreakLine="改行あり"/>
+      <DateTimePickerPlus FieldName="老齢裁定日" WithLabel="老齢裁定日" BreakLine="改行あり"/>
+      <DateTimePickerPlus FieldName="資格取得年月日" WithLabel="資格取得日" BreakLine="改行あり"/>
+      <DateTimePickerPlus FieldName="資格喪失年月日" WithLabel="資格喪失日" BreakLine="改行あり"/>
+      <DateTimePickerPlus FieldName="農年受給日" WithLabel="受給年月日" BreakLine="改行あり"/>
+      
+      <GroupBoxPlus Name="旧制度">
+        <OptionButtonPlus FieldName= "国民年金加入種別" Params="なし,１号,２号,３号,調査中" WithLabel="国民年金加入種別" BreakLine="改行あり"/>
+        <OptionButtonPlus FieldName= "農年加入種別" Params="なし,当然加入,任意加入,資格者未加入,調査中" WithLabel="農業者年金加入種別" BreakLine="改行あり"/>
+        <TextBoxPlus TextBoxMode="Free" FieldName="被保険者番号" WithLabel="被保険者番号" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+        <TextBoxPlus TextBoxMode="Free" FieldName="農年受給者番号" WithLabel="農年受給者番号" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+        <CheckButtonPlus FieldName="経営移譲の有無" YesCaption="あり" NoCaption="なし"  WithLabel= "移譲受給有無" BreakLine="改行あり"/>
+        <TextBoxPlus TextBoxMode="Free" FieldName="経営移譲証書番号" WithLabel="経営移譲証書番号" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+        <CheckButtonPlus FieldName= "老齢受給の有無" YesCaption="あり" NoCaption="なし" WithLabel="老齢受給の有無" BreakLine="改行あり"/>
+        <TextBoxPlus TextBoxMode="Free" FieldName="老齢受給証書番号" WithLabel="老齢受給証書番号" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+        <CheckButtonPlus FieldName= "一時給付金の有無" YesCaption="あり" NoCaption="なし" WithLabel="一時給付金の有無" BreakLine="改行あり"/>
+        <OptionButtonPlus FieldName= "その他年金種別" Params="なし,みどり年金,老齢年金,その他" WithLabel="その他年金種別" BreakLine="改行あり"/>
+        <FitLabelWidth/>
+      </GroupBoxPlus>
+      <GroupBoxPlus Name="新制度">
+        <OptionButtonPlus FieldName= "新制度年金種別" Params="なし,通常加入,政策支援,調査中" WithLabel="年金種別" BreakLine="改行あり"/>
+        <OptionButtonPlus FieldName= "新制度変更前種別" Params="なし,通常加入,政策支援,調査中" WithLabel="変更前の種類" BreakLine="改行あり"/>
+        <DateTimePickerPlus FieldName="新制度変更日" WithLabel="変更年月日" BreakLine="改行あり"/>
+        <OptionButtonPlus FieldName= "新制度政策支援加入区分" Params="なし,１号,２号,３号,４号,５号,６号,調査中" WithLabel="政策支援加入区分" BreakLine="改行あり"/>
+        <OptionButtonPlus FieldName= "新制度変更前政策支援加入区分" Params="なし,１号,２号,３号,４号,５号,６号,調査中" WithLabel="変更前政策支援加入区分" BreakLine="改行あり"/>
+        <DateTimePickerPlus FieldName="新制度政策支援認定日" WithLabel="政策支援認定日" BreakLine="改行あり"/>
+        <TextBoxPlus TextBoxMode="Free" FieldName="新制度被保険者記号番号" WithLabel="新制度被保険者記号番号" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+        <DateTimePickerPlus FieldName="新制度資格停止日" WithLabel="資格停止日" BreakLine="改行あり"/>
+        <CheckButtonPlus FieldName= "新制度死亡一時金の有無" YesCaption="あり" NoCaption="なし" WithLabel="一時給付金の有無" BreakLine="改行あり"/>
+        <FitLabelWidth/>
+      </GroupBoxPlus>    
+      <FitLabelWidth/>
+    </GroupBoxPlus>
+    <GroupBoxPlus Name="その他">
+      <RichTextBoxNext FieldName="備考" Width="400" WithLabel="備考" BreakLine="改行あり"/>
+      <CheckButtonPlus FieldName="選挙権の有無" YesCaption="あり" NoCaption="なし" WithLabel="選挙権の有無" BreakLine="改行あり"/>
+      <TextBoxPlus TextBoxMode="Free" FieldName="投票区" WithLabel="投票区" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="頁番号" WithLabel="世帯一連" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+      <TextBoxPlus TextBoxMode="Free" FieldName="整理番号" WithLabel="選挙人一連" ReadOnly="IsCanEdit" Width="200" BreakLine="改行あり" />
+      <CheckButtonPlus FieldName= "先行異動" YesCaption="あり" NoCaption="なし" WithLabel="先行異動" BreakLine="改行なし"/>
+      <DateTimePickerPlus FieldName="先行異動日" WithLabel="異動日" BreakLine="改行あり"/>
+      <CheckButtonPlus FieldName= "合併異動" YesCaption="あり" NoCaption="なし" WithLabel="合併世帯" BreakLine="改行なし"/>
+      <DateTimePickerPlus FieldName="合併異動日" WithLabel="合併異動日" BreakLine="改行あり"/>
+      <CheckButtonPlus FieldName= "集積協力金の有無" YesCaption="あり" NoCaption="なし" WithLabel="集積協力金の有無" BreakLine="改行なし"/>
+      <ComboList FieldName="集積協力金開始時期" ListSource="協力金開始時期" WithLabel="集積協力金開始時期" BreakLine="改行あり"/>
+      <CheckButtonPlus FieldName= "転換協力金の有無" YesCaption="あり" NoCaption="なし" WithLabel="転換協力金の有無" BreakLine="改行なし"/>
+      <ComboList FieldName="転換協力金開始時期" ListSource="協力金開始時期" WithLabel="転換協力金開始時期" BreakLine="改行あり"/>
+      <FitLabelWidth/>
+    </GroupBoxPlus>
+  </DataViewNext>
+  <DataViewNext Name="D:農地Info">
+    <CreateButton Key="所有者を呼ぶ" Text="所有者を呼ぶ"/>
+    <GroupBoxPlus Name="管理情報">
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="ID" ReadOnly="IsReadOnly" WithLabel="ID" Width="80" BreakLine="改行なし" />
+
+    </GroupBoxPlus>
+  </DataViewNext>
+  <DataViewNext Name="申請非農地証明願">
+    <GroupBoxPlus Name="管理情報">
+      <TextBoxPlus TextBoxMode="Numeric" FieldName="ID" ReadOnly="IsReadOnly" WithLabel="ID" Width="80" BreakLine="改行なし" />
+
+    </GroupBoxPlus>
+  </DataViewNext>
+</DataViewCongig>
+  
